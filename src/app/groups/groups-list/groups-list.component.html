@@ -1,0 +1,13 @@
+<div class="flex flex-col items-center mt-8">
+  <h2 class="text-2xl font-bold mb-4">Grupos</h2>
+
+  <div *ngFor="let group of groupsFormArray; index as i">
+    <div [formGroup]="group">
+      <h2>{{ group?.get('name')?.value }}</h2>
+      <p>{{ group?.get('slug')?.value }}</p>
+      <p>{{ group?.get('description')?.value }}</p>
+      <img [src]="group.get('imageUrl')?.value" alt="Imagen de la noticia" class="news-image">
+      <button (click)="showDialog( group )" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-3">Ver más detalles</button>
+    </div>
+  </div>
+</div>

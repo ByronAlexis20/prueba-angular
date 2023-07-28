@@ -1,0 +1,13 @@
+<div class="flex flex-col items-center mt-8">
+  <h2 class="text-2xl font-bold mb-4">Noticias</h2>
+
+  <div *ngFor="let newsItem of newsFormArray; index as i">
+    <div [formGroup]="newsItem">
+      <h2>{{ newsItem?.get('title')?.value }}</h2>
+      <p>{{ newsItem?.get('subtitle')?.value }}</p>
+      <p>{{ newsItem?.get('shortDescription')?.value }}</p>
+      <img [src]="newsItem.get('imageUrl')?.value" alt="Imagen de la noticia" class="news-image">
+      <button (click)="showDialog( newsItem )" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-3">Ver más detalles</button>
+    </div>
+  </div>
+</div>

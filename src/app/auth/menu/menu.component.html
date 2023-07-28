@@ -1,0 +1,11 @@
+<nav>
+    <ul>
+        <li><a routerLink="/menu/noticias" routerLinkActive="active">Noticias</a></li>
+        <li><a routerLink="/menu/grupos" routerLinkActive="active">Grupos</a></li>
+        <li><a routerLink="/menu/personas" routerLinkActive="active">Personas</a></li>
+    </ul>
+    <a (click)="logout()">Cerrar Sesión</a>
+</nav>
+<div class="content">
+    <router-outlet></router-outlet>
+</div>

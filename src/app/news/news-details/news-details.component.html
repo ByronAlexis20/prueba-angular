@@ -1,0 +1,18 @@
+<div>
+  
+    <h2 class="text-3xl font-extrabold text-gray-900">{{ news?.title }}</h2>
+    <p class="mt-2 text-xl text-gray-600">{{ news?.subtitle }}</p>
+
+    <div class="mt-6">
+      <img [src]="news?.imageUrl" alt="Imagen de la noticia" class="w-full h-64 object-cover">
+    </div>
+
+    <div class="mt-6">
+      <p class="text-gray-900">{{ news?.shortDescription }}</p>
+    </div>
+
+    <div class="mt-6">
+      <button (click)="exitDialog( )" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Cerrar</button>
+    </div>
+
+</div>  
