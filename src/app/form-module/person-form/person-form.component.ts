@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ChildrenFormComponent } from '../children-form/children-form.component';
 
 @Component({
   selector: 'app-person-form',
@@ -11,7 +13,7 @@ export class PersonFormComponent implements OnInit {
   childrenList: any[] = [];
   favoriteMoviesList: any[] = [];
 
-  constructor(private formBuilder: FormBuilder) { 
+  constructor(private formBuilder: FormBuilder, private dialog: MatDialog) { 
     this.personForm = this.formBuilder.group({
       name: ['', Validators.required],
       age: ['', Validators.required],
@@ -38,12 +40,24 @@ export class PersonFormComponent implements OnInit {
   }
 
   addChild() {
-    const childForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      age: ['', Validators.required]
+    let dialogRef = this.dialog.open( ChildrenFormComponent, {
+      width: '1000px', height: '400px', data: null });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      const childForm = this.formBuilder.group({
+        name: [result.name, Validators.required],
+        age: [result.age, Validators.required]
+      });
+      console.log(childForm)
+      
+      this.children.push(childForm);
+      this.children.updateValueAndValidity();
+      
     });
-    this.childrenList.push(childForm.value);
-    (this.personForm.get('children') as FormArray).push(childForm);
+  }
+
+  get children(): FormArray {
+    return this.personForm.get('children') as FormArray;
   }
 
   addFavoriteMovie() {

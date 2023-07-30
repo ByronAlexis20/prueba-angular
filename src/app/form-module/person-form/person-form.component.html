@@ -13,25 +13,29 @@
 
   <!-- Formulario para los hijos (children) -->
   <div formArrayName="children">
+    <button type="button" (click)="addChild()" class="px-2 py-1 bg-green-500 text-white rounded">Agregar hijo</button>
     <table class="w-full">
       <tr>
         <td class="px-2 py-1">Nombre del hijo:</td>
         <td class="px-2 py-1">Edad del hijo:</td>
         <td></td>
       </tr>
-      <tr *ngFor="let child of childrenControls; let i = index">
-        <td class="px-2 py-1">
-          <input type="text" formControlName="name" class="w-full border border-gray-300 rounded px-2 py-1" />
-        </td>
-        <td class="px-2 py-1">
-          <input type="number" formControlName="age" class="w-full border border-gray-300 rounded px-2 py-1" />
-        </td>
-        <td class="px-2 py-1">
-          <button type="button" (click)="removeChild(i)" class="px-2 py-1 bg-red-500 text-white rounded">Eliminar hijo</button>
-        </td>
+      <tr>
+        <div *ngFor="let child of children.controls; let i = index">
+          <div [formGroupName]="i">
+            <td class="px-2 py-1">
+              <input type="text" readonly formControlName="name" class="w-full border border-gray-300 rounded px-2 py-1" />
+            </td>
+            <td class="px-2 py-1">
+              <input type="number" readonly formControlName="age" class="w-full border border-gray-300 rounded px-2 py-1" />
+            </td>
+            <td class="px-2 py-1">
+              <button type="button" (click)="removeChild(i)" class="px-2 py-1 bg-red-500 text-white rounded">Eliminar hijo</button>
+            </td>
+          </div>
+        </div>
       </tr>
     </table>
-    <button type="button" (click)="addChild()" class="px-2 py-1 bg-green-500 text-white rounded">Agregar hijo</button>
   </div>
   <br />
 
