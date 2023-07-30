@@ -50,21 +50,23 @@
         <td></td>
       </tr>
       <tr *ngFor="let movie of favoriteMoviesControls; let i = index">
-        <td class="px-2 py-1">
-          <input type="text" formControlName="name" class="w-full border border-gray-300 rounded px-2 py-1" />
-        </td>
-        <td class="px-2 py-1">
-          <input type="text" formControlName="director" class="w-full border border-gray-300 rounded px-2 py-1" />
-        </td>
-        <td class="px-2 py-1">
-          <input type="number" formControlName="year" class="w-full border border-gray-300 rounded px-2 py-1" />
-        </td>
-        <td class="px-2 py-1">
-          <input type="checkbox" formControlName="oscarWinner" />
-        </td>
-        <td class="px-2 py-1">
-          <button type="button" (click)="removeFavoriteMovie(i)" class="px-2 py-1 bg-red-500 text-white rounded">Eliminar película favorita</button>
-        </td>
+        <div [formGroupName]="i">
+          <td class="px-2 py-1">
+            <input type="text" formControlName="name" class="w-full border border-gray-300 rounded px-2 py-1" />
+          </td>
+          <td class="px-2 py-1">
+            <input type="text" formControlName="director" class="w-full border border-gray-300 rounded px-2 py-1" />
+          </td>
+          <td class="px-2 py-1">
+            <input type="number" formControlName="year" class="w-full border border-gray-300 rounded px-2 py-1" />
+          </td>
+          <td class="px-2 py-1">
+            <input type="checkbox" formControlName="oscarWinner" />
+          </td>
+          <td class="px-2 py-1">
+            <button type="button" (click)="removeFavoriteMovie(i)" class="px-2 py-1 bg-red-500 text-white rounded">Eliminar película favorita</button>
+          </td>
+        </div>
       </tr>
     </table>
     <button type="button" (click)="addFavoriteMovie()" class="px-2 py-1 bg-green-500 text-white rounded">Agregar película favorita</button>
