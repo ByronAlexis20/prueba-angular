@@ -3,19 +3,11 @@
     Detalle
     </h1>
 </div>
-<div class="grid grid-cols-2">
+<div class="grid grid-cols-2 gap-4">
     <h2 class="col-span-2 text-3xl font-extrabold text-gray-900">{{ group?.name }}</h2>
     <h3 class="mt-2 text-xl text-gray-600" [innerHTML]="group?.description"></h3>
     <div *ngIf="group?.category" class="col-span-2">
-        <mat-card class="card-group">
-            <mat-card-header>
-            <mat-card-subtitle>Categoria</mat-card-subtitle>
-            <mat-card-title>{{group?.category.name}}</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-            <div [innerHTML]="group?.category.description"></div>
-            </mat-card-content>
-        </mat-card>
+        <app-gd-categoria (emmitMensaje)="presentarAlert()" [category]="group?.category"></app-gd-categoria>
     </div>
     <div class="mt-6">
         <img [src]="group?.imageUrl" alt="Imagen de la noticia" class="w-full h-64 object-cover">

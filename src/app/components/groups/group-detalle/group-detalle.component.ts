@@ -29,4 +29,7 @@ export class GroupDetalleComponent {
   regresar(){
     this.router.navigate(['../'], { relativeTo: this.activedRoute });
   }
+  presentarAlert() {
+    alert("Este es un evento desde el componente hijo CategoriaComponent, presentado en el componente padre (GroupDetalleComponent).")
+  }
 }

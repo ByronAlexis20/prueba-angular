@@ -8,6 +8,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { MainComponent } from './main/main.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { GroupDetalleComponent } from './components/groups/group-detalle/group-detalle.component';
+import { GdCategoriaComponent } from './components/groups/group-detalle/gd-categoria/gd-categoria.component';
 import { AppMaterialModule } from './app-material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -55,7 +56,8 @@ const routes: Routes = [
     PersonComponent,
     IrSesionComponent,
     HijoComponent,
-    PeliculaComponent
+    PeliculaComponent,
+    GdCategoriaComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
