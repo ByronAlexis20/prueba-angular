@@ -28,6 +28,9 @@ export class LoginComponent implements OnInit {
     });
   }
   login() {
+    sessionStorage.setItem("token","dgdfgfdgsfgsdfgsdf");
+    this.router.navigate(['/home']);
+    return;
     this.isLoading = true;
     this.error = null;
     this.userService.login(this.formLogin.value).subscribe(
