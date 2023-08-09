@@ -5,6 +5,7 @@ export class Persona {
     apellidos!: string;
     hijos!: Persona[];
     peliculas!: Pelicula[];
+    edad!: number;
     constructor(){
     }
 }

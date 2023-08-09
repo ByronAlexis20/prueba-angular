@@ -24,15 +24,6 @@ export class UserService {
       `${Global.url}/users/logins`, 
       JSON.stringify(user), 
       { headers: this.reqHeader }
-    ).subscribe(
-      (r:any)=>{
-        sessionStorage.setItem("token",r.result[0].access_token);
-        this.router.navigate(['/home']);
-      },
-      (err:any)=> {
-        sessionStorage.setItem("token","abc1234");
-        this.router.navigate(['/home']);
-      }
     );
   }
 }

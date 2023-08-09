@@ -13,6 +13,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PersonComponent } from './components/person/person.component';
 import { IrSesionComponent } from './utils/ir-sesion/ir-sesion.component';
+import { HijoComponent } from './components/person/hijo/hijo.component';
+import { PeliculaComponent } from './components/person/pelicula/pelicula.component';
 
 const routes: Routes = [
   { 
@@ -51,7 +53,9 @@ const routes: Routes = [
     GroupsComponent,
     GroupDetalleComponent,
     PersonComponent,
-    IrSesionComponent
+    IrSesionComponent,
+    HijoComponent,
+    PeliculaComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

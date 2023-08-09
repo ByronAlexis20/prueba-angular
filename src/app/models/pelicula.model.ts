@@ -2,7 +2,7 @@
 export class Pelicula {
     nombre!: string;
     director!: string;
-    año!: number;
+    anio!: number;
     ganoOscar!: boolean;
     constructor(){
     }

@@ -15,7 +15,8 @@
     <div class="col-span-6 mt-4">
       <div class="flex justify-content-between">
           <label class="mt-auto">Hijos:</label>
-          <button class="ml-auto" type="button" (click)="addHijos()" mat-raised-button color="secondary">Agregar</button>
+          <button class="ml-auto" type="button" (click)="openDialogHijo()" mat-raised-button color="secondary">Agregar</button>
+          <!-- <button class="ml-auto" type="button" (click)="addHijos()" mat-raised-button color="secondary">Agregar</button> -->
       </div>
       <table formArrayName="hijos" class="table-auto text-center">
           <thead class="bg-primary">
@@ -23,6 +24,7 @@
                   <th>#</th>
                   <th>Nombres</th>
                   <th>Apellidos</th>
+                  <th>Edad</th>
                   <th></th>
               </tr>
           </thead>
@@ -32,10 +34,13 @@
                       {{i+1}}
                   </td>
                   <td>
-                      <input formControlName="nombres" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text">
+                      <input formControlName="nombres" type="text" readonly>
                   </td>
                   <td>
-                    <input formControlName="apellidos" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text">
+                    <input formControlName="apellidos" type="text" readonly>
+                  </td>
+                  <td>
+                    <input formControlName="edad" type="text" readonly>
                   </td>
                   <td class="d-inline-flex">
                       <button type="button" (click)="removeHijos(i)" mat-raised-button color="secondary"><mat-icon>delete</mat-icon></button>
@@ -51,7 +56,7 @@
     <div class="col-span-6 mt-4">
       <div class="flex justify-content-between">
           <label class="mt-auto">Peliculas:</label>
-          <button class="ml-auto" type="button" (click)="addPeliculas()" mat-raised-button color="secondary">Agregar</button>
+          <button class="ml-auto" type="button" (click)="openDialogPelicula()" mat-raised-button color="secondary">Agregar</button>
       </div>
       <table formArrayName="peliculas" class="table-auto text-center">
           <thead class="bg-primary">
@@ -70,16 +75,16 @@
                       {{i+1}}
                   </td>
                   <td>
-                      <input formControlName="nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text">
+                      <input formControlName="nombre" type="text">
                   </td>
                   <td>
-                    <input formControlName="director" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text">
+                    <input formControlName="director" type="text">
                   </td>
                   <td>
-                    <input formControlName="anio" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number">
+                    <input formControlName="anio" type="number">
                   </td>
                   <td>
-                    <mat-checkbox formControlName="ganoOscar" ></mat-checkbox>
+                    <mat-checkbox color="primary" formControlName="ganoOscar" ></mat-checkbox>
                   </td>
                   <td>
                       <button type="button" (click)="removePelicula(i)" mat-raised-button color="secondary"><mat-icon>delete</mat-icon></button>

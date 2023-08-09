@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
@@ -10,6 +10,8 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class LoginComponent implements OnInit {
   formLogin: FormGroup;
+  isLoading: boolean = false;
+  @Input() error?: string | null;
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
@@ -21,10 +23,24 @@ export class LoginComponent implements OnInit {
     });
   }
   ngOnInit() {
-
+    this.formLogin.valueChanges.subscribe(() => {
+      this.isLoading = false;
+      this.error = null;
+    });
   }
   login() {
-    this.userService.login(this.formLogin.value)
+    this.isLoading = true;
+    this.userService.login(this.formLogin.value).subscribe(
+      (r:any)=>{
+        this.isLoading = false;
+        sessionStorage.setItem("token",r.result[0].access_token);
+        this.router.navigate(['/home']);
+      },
+      (err:any)=> {
+        this.isLoading = false;
+        this.error = 'Credenciales incorrectas. Inténtalo de nuevo.';
+      }
+    );
   }
   goToNoticias() {
     this.router.navigate(['/news']);

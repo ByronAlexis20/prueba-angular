@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Agregar pelicula</h1>
+<div mat-dialog-content>
+    <div class="grid grid-cols-4 gap-4">
+        <mat-form-field class="col-span-4">
+            <mat-label>Nombre</mat-label>
+            <input matInput [(ngModel)]="pelicula.nombre">
+          </mat-form-field>
+          <mat-form-field class="col-span-4">
+            <mat-label>Director</mat-label>
+            <input matInput [(ngModel)]="pelicula.director">
+          </mat-form-field>
+          <mat-form-field class="col-span-2">
+            <mat-label>Año</mat-label>
+            <input matInput [(ngModel)]="pelicula.anio" type="number">
+          </mat-form-field>
+          <div class="col-span-2">
+            <mat-label>Gano Oscar?</mat-label>
+            <mat-checkbox color="primary" [(ngModel)]="pelicula.ganoOscar" ></mat-checkbox>
+          </div>
+    </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="pelicula" cdkFocusInitial>Listo</button>
+</div>

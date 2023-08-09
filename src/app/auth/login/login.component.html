@@ -1,60 +1,10 @@
-<!-- Instalar y utilizar en el proyecto las bibliotecas:
-Angular Material
-Tailwind
-
-Es muy importante utilizar los componentes que brinda la biblioteca de material, así 
-como el grid nativo de tailwind para trabajar los layouts y la responsividad en todo 
-lo desarrollado. De igual manera será muy evaluada la estética de los componentes.
-Se valorará el uso de las herramientas del framework conversadas en la entrevista 
-técnica, lazy load, guards, interfaces, enums, interceptors, pipes, input-output, 
-environments, smart-dump components, templates, etcétera.
-
-
-Autenticación contra un API:
-Documentación: https://plaam.docs.plaam.com/
-La url base del API de autenticación es: https://rest.apistaging.plaam.com/v1
-post /merchants/{merchantId}/users/logins
-
-Para los efectos de esta prueba utiliza siempre como merchantId 71
-
-Credenciales:
-prueba@qaroni.com
-123456789
-
-
-Realiza también los módulos para visualizar:
-
-Noticias y ver una en detalle:
-get /merchants/{merchantId}/news
-get /merchants/{merchantId}/news/{newId}
-
-Grupos y ver uno en detalle (solo debe ser visto por usuarios autenticados.)
-get /merchants/{merchantId}/groups
-get /merchants/{merchantId}/groups/{groupId}
-
-En un módulo aparte, crear un formulario reactivo (no hace falta el envío a algún API, con un console.log es suficiente)
-El formulario debe recibir:
-- Los datos de una persona
-- Los datos de sus hijos menores de 18 años (que también son personas), puede tener uno, varios o ninguno.
-- Sus películas favoritas, la persona puede tener una, muchas o ninguna. (Nombre de la película, director, año, si ganó el Oscar o no)
-
-
-Testing:
-Realizar las correspondientes pruebas al desarrollo.
-
-
-
-Expectativas
-- El desarrollo se planificó para un máximo de 16 horas (dos días laborables).
-- Dominio de las herramientas de Angular.
-- El formato del código (prettier).
-- La estética front, visualmente debe ser muy agradable.
-- Manejo de HTML CSS SASS.-->
-
 
 <div class="container">
   <div class="header">
     <button (click)="goToNoticias()" mat-raised-button color="primary">Ver noticias</button>
+  </div>
+  <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
+      <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
   </div>
     <div class="login grid grid-cols-6">
         <div class=" col-span-2 col-start-3">
@@ -67,6 +17,9 @@ Expectativas
                   <mat-label>Contraseña</mat-label>
                   <input formControlName="password" matInput type="password">
                 </mat-form-field>
+                <p *ngIf="error" class="error">
+                  {{ error }}
+                </p>
                 <button mat-raised-button type="submit" color="primary">Ingresar</button>
             </form>
         </div>

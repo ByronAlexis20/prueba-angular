@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Agregar hijo</h1>
+<div mat-dialog-content>
+  <form [formGroup]="childrenForm">
+    <mat-form-field>
+      <mat-label>Nombres</mat-label>
+      <input matInput required type="text" formControlName="name">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Apellidos</mat-label>
+      <input matInput required type="text" formControlName="lastName">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Edad</mat-label>
+      <input matInput required type="number" formControlName="age">
+      <mat-error *ngIf="childrenForm.get('age')?.hasError('invalidAge')">
+        La edad debe ser menor de 18 años.
+      </mat-error>
+    </mat-form-field>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onNoClick()">Cancelar</button>
+      <button mat-button (click)="addChild()" cdkFocusInitial>Listo</button>
+    </div>
+  </form>
+</div>

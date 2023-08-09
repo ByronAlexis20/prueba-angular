@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { HijoComponent } from './hijo/hijo.component';
+import { Persona } from 'src/app/models/person.model';
+import { PeliculaComponent } from './pelicula/pelicula.component';
+import { Pelicula } from 'src/app/models/pelicula.model';
 
 @Component({
   selector: 'app-person',
@@ -8,7 +13,10 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class PersonComponent {
   formPerson: FormGroup;
-  constructor(private formBuilder: FormBuilder){
+  constructor(
+    private formBuilder: FormBuilder,
+    public dialog: MatDialog
+  ){
     this.formPerson = formBuilder.group({
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
@@ -26,22 +34,25 @@ export class PersonComponent {
   register(){
     console.log(this.formPerson.value);
   }
-  addHijos(){
-    this.hijos.push(
-      this.formBuilder.group({
-        nombres: ['', [ Validators.required]],
-        apellidos: ['', [ Validators.required]],
-      })
-    );
+  addHijos(hijo:Persona){
+    let fh = this.formBuilder.group({
+      nombres: ['', [ Validators.required]],
+      apellidos: ['', [ Validators.required]],
+      edad: [0, [ Validators.required]],
+    });
+    fh.patchValue(hijo);
+    this.hijos.push(fh);
   }
-  addPeliculas(){
+  addPeliculas(pelicula:Pelicula){
+    let fp = this.formBuilder.group({
+      nombre: ['', [ Validators.required]],
+      director: ['', [ Validators.required]],
+      anio: [1999, [ Validators.required]],
+      ganoOscar: [false],
+    });
+    fp.patchValue(pelicula);
     this.peliculas.push(
-      this.formBuilder.group({
-        nombre: ['', [ Validators.required]],
-        director: ['', [ Validators.required]],
-        anio: [1999, [ Validators.required]],
-        ganoOscar: [false],
-      })
+      fp
     );
   }
   removeHijos(i:number) {
@@ -49,5 +60,21 @@ export class PersonComponent {
   }
   removePelicula(i:number) {
     this.peliculas.removeAt(i);
+  }
+
+
+  openDialogHijo(): void {
+    const dialogRef = this.dialog.open(HijoComponent);
+    dialogRef.afterClosed().subscribe((result:Persona) => {
+      if( result )
+        this.addHijos(result)
+    });
+  }
+  openDialogPelicula(): void {
+    const dialogRef = this.dialog.open(PeliculaComponent);
+    dialogRef.afterClosed().subscribe((result:Pelicula) => {
+      if( result )
+        this.addPeliculas(result)
+    });
   }
 }
