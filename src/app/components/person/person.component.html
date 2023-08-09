@@ -1,11 +1,97 @@
-<form [formGroup]="formPerson" (ngSubmit)="register()">
-    <mat-form-field>
-      <mat-label>usuario</mat-label>
-      <input formControlName="username" matInput type="email">
+<div>
+  <h1>
+    Registro de persona
+  </h1>
+</div>
+<form class="grid grid-cols-6 gap-4" [formGroup]="formPerson" (ngSubmit)="register()">
+    <mat-form-field class="col-span-3">
+      <mat-label>Nombres</mat-label>
+      <input formControlName="nombres" matInput type="text">
     </mat-form-field>
-    <mat-form-field>
-      <mat-label>Contraseña</mat-label>
-      <input formControlName="password" matInput type="password">
+    <mat-form-field class="col-span-3">
+      <mat-label>Apellidos</mat-label>
+      <input formControlName="apellidos" matInput type="text">
     </mat-form-field>
-    <button mat-raised-button type="submit" color="primary">Ingresar</button>
+    <div class="col-span-6 mt-4">
+      <div class="flex justify-content-between">
+          <label class="mt-auto">Hijos:</label>
+          <button class="ml-auto" type="button" (click)="addHijos()" mat-raised-button color="secondary">Agregar</button>
+      </div>
+      <table formArrayName="hijos" class="table-auto text-center">
+          <thead class="bg-primary">
+              <tr>
+                  <th>#</th>
+                  <th>Nombres</th>
+                  <th>Apellidos</th>
+                  <th></th>
+              </tr>
+          </thead>
+          <tbody class="bg-white">
+              <tr [formGroupName]="i" *ngFor="let r of hijos.controls; let i=index">
+                  <td>
+                      {{i+1}}
+                  </td>
+                  <td>
+                      <input formControlName="nombres" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text">
+                  </td>
+                  <td>
+                    <input formControlName="apellidos" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text">
+                  </td>
+                  <td class="d-inline-flex">
+                      <button type="button" (click)="removeHijos(i)" mat-raised-button color="secondary"><mat-icon>delete</mat-icon></button>
+                  </td> 
+              </tr>
+              <tr *ngIf="!hijos?.controls?.length">
+                  <td class="text-center" [attr.colspan]="4">Agregue hijos en caso de tener.</td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+    <hr>
+    <div class="col-span-6 mt-4">
+      <div class="flex justify-content-between">
+          <label class="mt-auto">Peliculas:</label>
+          <button class="ml-auto" type="button" (click)="addPeliculas()" mat-raised-button color="secondary">Agregar</button>
+      </div>
+      <table formArrayName="peliculas" class="table-auto text-center">
+          <thead class="bg-primary">
+              <tr>
+                  <th >#</th>
+                  <th >Nombre</th>
+                  <th >Director</th>
+                  <th >Año</th>
+                  <th >Gano Oscar</th>
+                  <th ></th>
+              </tr>
+          </thead>
+          <tbody class="bg-white">
+              <tr [formGroupName]="i" *ngFor="let r of peliculas.controls; let i=index">
+                  <td>
+                      {{i+1}}
+                  </td>
+                  <td>
+                      <input formControlName="nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text">
+                  </td>
+                  <td>
+                    <input formControlName="director" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text">
+                  </td>
+                  <td>
+                    <input formControlName="anio" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number">
+                  </td>
+                  <td>
+                    <mat-checkbox formControlName="ganoOscar" ></mat-checkbox>
+                  </td>
+                  <td>
+                      <button type="button" (click)="removePelicula(i)" mat-raised-button color="secondary"><mat-icon>delete</mat-icon></button>
+                  </td> 
+              </tr>
+              <tr *ngIf="!peliculas?.controls?.length">
+                  <td class="text-center" [attr.colspan]="6">Agregue peliculas en caso de tener.</td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+    <div class="col-span-6 mt-4 text-center">
+      <button mat-raised-button type="submit" color="primary">Ingresar</button>
+    </div>
 </form>

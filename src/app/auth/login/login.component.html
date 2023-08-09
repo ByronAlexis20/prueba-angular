@@ -56,25 +56,19 @@ Expectativas
   <div class="header">
     <button (click)="goToNoticias()" mat-raised-button color="primary">Ver noticias</button>
   </div>
-  <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
-    <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
-  </div>
-  <div class="login grid grid-cols-6">
-    <div class=" col-span-2 col-start-3">
-      <form [formGroup]="formLogin" (ngSubmit)="login()">
-        <mat-form-field>
-          <mat-label>usuario</mat-label>
-          <input formControlName="username" required matInput type="email" [readonly]="isLoading">
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Contraseña</mat-label>
-          <input formControlName="password" required matInput type="password" [readonly]="isLoading">
-        </mat-form-field>
-        <p *ngIf="error" class="error">
-          {{ error }}
-        </p>
-        <button mat-raised-button type="submit" color="primary" [disabled]="isLoading">Ingresar</button>
-      </form>
+    <div class="login grid grid-cols-6">
+        <div class=" col-span-2 col-start-3">
+            <form [formGroup]="formLogin" (ngSubmit)="login()">
+                <mat-form-field>
+                  <mat-label>usuario</mat-label>
+                  <input formControlName="username" matInput type="email">
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Contraseña</mat-label>
+                  <input formControlName="password" matInput type="password">
+                </mat-form-field>
+                <button mat-raised-button type="submit" color="primary">Ingresar</button>
+            </form>
+        </div>
     </div>
-  </div>
 </div>

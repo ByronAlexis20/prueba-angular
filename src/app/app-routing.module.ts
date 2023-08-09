@@ -27,11 +27,16 @@ const routes: Routes = [
     ]
   },
   { path: 'home',data:{title: 'Inicio' }, component: MainComponent,canActivate:[AuthGuard],children: [
+      { path: '', redirectTo:'/home/groups', pathMatch : 'full'},
       { path:'groups', children: [
           { path:'', data: {title: 'Noticias'}, component: GroupsComponent},
           { path:':id',data:{title: 'Noticia'}, component: GroupDetalleComponent}
         ]
-      }
+      },
+      { path:'person', children: [
+        { path:'', data: {title: 'Persona'}, component: PersonComponent}
+      ]
+    }
     ]
   }
 ];

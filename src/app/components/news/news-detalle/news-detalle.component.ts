@@ -15,8 +15,8 @@ export class NewsDetalleComponent {
     private newsService: NewsService
   ) {
     this.activedRoute.paramMap.subscribe(params => {
-    this.getNews(Number(params.get("id")));
-  })
+      this.getNews(Number(params.get("id")));
+    })
 
   }
   getNews(id: number) {

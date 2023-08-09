@@ -22,6 +22,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 @NgModule({
   exports: [
+    MatSidenavModule,
     MatStepperModule,
     MatRadioModule,
     MatTabsModule,
