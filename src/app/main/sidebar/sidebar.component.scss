@@ -1,0 +1,122 @@
+.profile-element {
+    padding: 0 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    .img-usu {
+        width: 25%;
+        .avatar-upload {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            &:before {
+                content: "";
+                display: block;
+                padding-top: 100%;
+            }
+            .avatar-preview {
+                position:  absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                color: white;
+                text-align: center;
+            }
+        }
+    }
+    .info {
+        width: 75%;
+    }
+}
+    
+.alertas .btn:hover {
+    transform: scale(1.05);
+}
+    
+.brand-link {
+    margin: 0px auto;
+}
+
+.brand-link-mini {
+    img {
+        max-height: 50px;
+    }
+}
+    
+.clear {
+    display: block;
+    overflow: hidden;
+}
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid\9;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+.avatar-upload {
+    // position: relative;
+    // max-width: 205px;
+    .avatar-edit {
+        position: absolute;
+        right: 0px;
+        z-index: 1;
+        bottom: 0px;
+        input {
+            display: none;
+            + label {
+                display: inline-block;
+                width: 25px;
+                height: 25px;
+                font-size: 0.9rem;
+                margin-bottom: 0;
+                border-radius: 100%;
+                background: #FFFFFF;
+                border: 1px solid transparent;
+                box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+                cursor: pointer;
+                font-weight: normal;
+                transition: all .2s ease-in-out;
+                &:hover {
+                    background: #f1f1f1;
+                    border-color: #d6d6d6;
+                }
+            }
+        }
+    }
+    .avatar-preview {
+        border-radius: 100%;
+        border: 1px solid #F8F8F8;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+        > div {
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    }
+}
+.color-ico {
+    filter: brightness(0) invert(75%);
+}
+    
+.sidebar-top {
+    top: 12rem !important;
+}
+    
+.inf-version {
+    color: white;
+    position: absolute;
+    bottom: 2px;
+    width: 100%;
+    text-align: center;
+}
+    

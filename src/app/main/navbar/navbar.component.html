@@ -1,0 +1,106 @@
+<nav class="navbar navbar-expand navbar-white navbar-light py-0 justify-content-between">
+  <div *ngIf="observaciones?.length > 0 && estadoUsuario === 'O'" class="alert alert-warning alert-obs alert-dismissible fade show m-0 py-2" role="alert">
+    Tu información para verificación y apertura de tu cuenta ha sido <strong>observada</strong>. <a class="alert-link" [routerLink]="['/home/miCuenta/registroUsuario']">Ingresa aqui</a>
+    <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <div *ngIf="numPantalla>1 && numPantalla<9" class="alert alert-primary  alert-obs alert-dismissible fade show m-0 py-2" role="alert">
+    Se encuentra pendiente la verificación de tu cuenta. Debes llenar toda la información y confirmar tu cuenta para empezar a invertir. <button data-bs-dismiss="alert" aria-label="Close" class="btn btn-link p-0" (click)="goToRegistroUsuario()">Continuar verificación</button>
+    <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <button class="nav-link btn btn-link" data-widget="pushmenu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </li>
+  </ul>
+  <div *ngIf="!confirmadoPrivado && infoNumPantalla>2" class="content-alert-tratamiento-dp d-flex justify-content-center">
+    <div class="alert alert-warning alert-dismissible fade show py-1 my-2" role="alert">
+      Debes autorizar el tratamiento de tus datos personales. Mas información <a [routerLink]="null" (click)="openModalTratamiento()" class="alert-link">has click aquí</a>.
+      <button type="button" class="btn-close py-1" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+  <ul class="dots navbar-nav">
+    <li class="mx-2">
+      <a [matMenuTriggerFor]="notifications">
+        <span class="fas fa-envelope"><mark *ngIf="numNotificaciones > 0" class="big swing">{{numNotificaciones>99?'+9':numNotificaciones}}</mark></span>
+      </a>
+      <mat-menu #notifications="matMenu" xPosition="before">
+        <div *ngIf="notificaciones.length == 0" class="d-flex" mat-menu-item>
+          <mat-card class="py-0 my-auto" style="display: flex; justify-content: center; align-items: center">
+            UD. NO TIENE NOTIFICACIONES...
+          </mat-card>
+        </div>
+        <a *ngFor="let notificacion of notificaciones" mat-menu-item (click)="openNotification(notificacion,modalShowNotify)" class="notify">
+          <div class="row mt-1">
+            <div class="col-2">
+                <img alt="image" [src]="'assets/img/isotipo.svg'"/>
+            </div>
+            <div class="col-10">
+                <div class="row">
+                    <div class="col-12 text-justify block-with-text" style="height: 30px;">{{notificacion.descripcion}}</div>
+                    <div class="col-4 mt-auto" style="font-weight: 300!important; font-size: 9px;">
+                      {{notificacion.haceTiempo}}
+                    </div>
+                    <div class="col-8">
+                      <div class="d-flex justify-content-end mt-1">
+                          <a [routerLink]="null" *ngIf="notificacion.leida == '0'" (click)="marcarLeidoNotificacion(notificacion.notificacionusuario_id);$event.stopPropagation();" class="badge badge-primary mx-1">Marcar como leído</a>
+                          <a [routerLink]="null" (click)="eliminarNotificacion(notificacion.notificacionusuario_id);$event.stopPropagation();" class="badge badge-danger mx-1"><i class="fas fa-trash"></i></a>
+                      </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </a>
+      </mat-menu>
+    </li>
+    <li class="mx-2">
+      <a [routerLink]="['/home/miPreportafolio']" class="d-flex" title="Mi carrito de inversión">
+        <span>
+          <mat-icon aria-hidden="false" aria-label="Carrito de inversión">shopping_cart</mat-icon>
+          <mark *ngIf="numCarrito > 0" class="big swing">{{numCarrito}}</mark>
+        </span>
+      </a> 
+    </li>
+    <li class="mx-2">
+      <a (click)="openModal(modalSalir)" [routerLink]="null" class="d-flex" title="Salir">
+        <span>
+          <mat-icon aria-hidden="false" aria-label="Carrito de inversión">logout</mat-icon>
+        </span>
+      </a> 
+    </li>
+  </ul>
+</nav>
+  
+<ng-template #modalShowNotify>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left">Notificación</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+          <p>{{notificacionSelected.descripcion}}</p>
+  </div>
+  <div class="modal-footer">
+    <a [routerLink]="[notificacionSelected.redirectTo]" (click)="modalRef?.hide()" *ngIf="notificacionSelected.redirectTo" class="btn btn-primary">Ir</a>
+    <a [routerLink]="['/home/miCuenta/registroUsuario']" (click)="modalRef?.hide()" [hidden]="notificacionSelected.titulo!='Observacion'" class="btn btn-primary">Ir</a>
+    <button type="button" class="btn btn-danger" (click)="eliminarNotificacion(notificacionSelected.notificacionusuario_id)">Eliminar</button>
+    <button type="button" (click)="modalRef?.hide()" class="btn btn-primary">Cerrar</button>
+  </div>
+</ng-template>
+<ng-template #modalSalir>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left">Cerrar sesión</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+          <p>Ud esta seguro de querer cerrar sesión?</p>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="modalRef?.hide()">Cancel</button>
+      <button type="button" (click)="logout()" class="btn btn-primary">Aceptar</button>
+  </div>
+</ng-template>

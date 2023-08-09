@@ -1,0 +1,683 @@
+<aside class="main-sidebar sidebar-dark-primary bg-primary elevation-4">
+    <a [routerLink]="['/home']" class="brand-link">
+      <img src="assets/img/logo-portafolio.svg" alt="Logo - Portafolio" class="rounded" style="opacity: .8;width: 100%;">
+    </a>
+    <a [routerLink]="['/home']" class="brand-link-mini w-75 mx-auto p-1">
+      <img src="assets/img/isotipo.svg" alt="Logo - portafolio" class="rounded p-1" style="opacity: .8;width: 100%;">
+    </a>
+    <div class="dropdown profile-element mt-3" style="text-align: center; display: flex;">
+      <div class="img-usu">
+        <div class='avatar-upload'>
+          <div class="avatar-edit">
+            <input #imageInput type='file' id="imageUpload" (change)="processFile(imageInput)" accept=".png, .jpg, .jpeg" />
+            <label for="imageUpload"><i [ngClass]="classUploadPerfil" class="fas"></i></label> 
+          </div>
+          <div class="avatar-preview">
+            <div id="imagePreview" [style.background-image]="'url(' + fotoPerfil + ')'">
+            </div>
+          </div>
+        </div>
+        <!-- <div class="h-100 avatar-upload">
+          
+        </div> -->
+      </div>
+      <div class="ms-2 info animated fadeInLeft">
+        <a class="dropdown-toggle" id="dropdownMenuLogin" data-bs-toggle="dropdown" href>
+          <span class="clear" style="white-space: initial;">
+            <span *ngIf="userTipoPersona === 1" style="display: grid;" class="mt-1 px-2">
+                <strong style="margin-bottom: -5px;" class="text-truncate font-bold text-white">{{userName}}</strong>
+                <strong class="font-bold text-white">{{userLastName}}</strong>
+            </span>
+            <span *ngIf="userTipoPersona !== 1" style="display: grid;" class="mt-1 px-2">
+              <strong style="margin-bottom: -5px;" class="text-truncate font-bold text-white">{{userRazonSocial}}</strong>
+            </span>
+            <span class="text-muted text-xs d-block mt-1">INVERSIONISTA<b class="caret"></b></span>
+          </span>
+        </a>
+        <ul class="dropdown-menu animated fadeInDown" style="margin:50px 0px 0px 30px" aria-labelledby="dropdownMenuLogin">
+          <li class="dropdown-item" (click)="openModal(modalSalir)"><a>Salir</a></li>
+        </ul>
+        <span *ngIf="estado === 'A'" style="background-color: #37406a; color: #07BBF7;" class="badge">Cuenta verificada y aprobada</span>
+        <span tooltip="Su cuenta está siendo verificada por nuestros asesores, lo cual tardará un máximo de 48 horas." *ngIf="numPantalla>=9 && estado === 'P'" class="badge bg-secondary text-dark px-2">En proceso de verificación</span>
+      </div>
+    </div>
+    <div class="alertas text-center" [hidden]="tipoPersona !== 1">
+      <a title="Necesitas confirmar tu cuenta para poder invertir a traves de nuestra plataforma." data-bs-toggle="tooltip" data-bs-placement="bottom" 
+          *ngIf="numPantalla<2" [routerLink]="['/home/miCuenta/registroUsuario']" class="btn btn-primary btn-sm bg-f2c6 mx-3 mt-1">
+        Empieza aquí
+      </a>
+      <a *ngIf="observaciones?.length > 0" [routerLink]="['/home/miCuenta/registroUsuario']" class="btn btn-danger btn-sm bg-paleta10 mx-3 mt-2">Corregir solicitud de inversión</a>
+    </div>
+    <div [ngClass]="{'sidebar-top':observaciones?.length > 0 || numPantalla<9}" class="sidebar mt-3">
+      <nav>
+        <ul id="side-menu" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <ng-container *ngFor="let menu of listMenu; let i = index">
+            <li *ngIf="menu.visible" [class.menu-open]="menu.active" class="nav-item has-treeview animated fadeInDown">
+              <a class="nav-link d-flex" [routerLink]="null" (click)="toggle(i,menu)"> 
+                <div *ngIf="menu.img != null" class="nav-icon mr-2 pb-2"><img class="color-ico" [src]="'./assets/img/ico/'+menu.img" alt=""></div>
+                <i *ngIf="menu.img == null" [ngClass]="'fa-'+menu.icon" class="nav-icon mr-2 fas"></i>
+                <p class="animated fadeIn my-auto">{{ menu.title }}<i *ngIf="menu.items.length>0" class="fas fa-angle-left right"></i></p>
+              </a>
+              <ul *ngIf="menu.items.length>0" class="nav nav-treeview nav nav-second-level collapse animated fadeInDown px-2" #submenu [ngClass]="{'in':menu.active}">
+                <ng-container *ngFor="let submenu of menu.items">
+                  <li class="nav-item" *ngIf="submenu.visible && (tipoPersona === 1 || (tipoPersona !== 1 && (submenu.bloques_items_id !== 6 && submenu.bloques_items_id !== 5)))">
+                    <a [routerLink]="null" (click)="toggle(i,submenu)" class="nav-link"><i class="nav-icon fas fa-level-up-alt fa-rotate-90"></i>
+                      <p>{{submenu?.title}}</p>
+                    </a>
+                  </li>
+                </ng-container>
+              </ul>
+            </li>
+          </ng-container>
+          <li class="nav-header"><b>¿NECESITAS AYUDA PARA SIMULAR TU FINANCIAMIENTO?</b></li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/home/preguntasFrecuentes">
+              <i class="nav-icon fas fa-question-circle"></i>
+              <p>Preguntas frecuentes</p>
+            </a>
+          </li>
+          <li class="nav-item has-treeview">
+            <a (click)="openModal(glosario)" class="nav-link">
+              <i class="nav-icon fas fa-font"></i>
+              <p>
+                Conoce términos financieros y bursátiles
+              </p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <span class="inf-version"><small><b>Version</b> {{currentApplicationVersion}}</small></span>
+</aside>
+<ng-template #glosario>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Glosario Bursátil</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body text-justify">
+            <p>&nbsp;Glosario de términos bursátiles que pueden ser útiles para usted:</p>
+            <p><strong>A</strong></p>
+            <p><strong>A LA PAR: </strong>Dícese del título cuya cotización es igual al 100% de su valor nominal. En nuestro país la cotización se expresa como porcentaje del valor nominal.</p>
+            <p><strong>ACCIÓN</strong>: Valor que representa la propiedad de su tenedor sobre una de las partes iguales en las que se divide el capital social de una sociedad anónima, de las sociedades en comandita por acciones y de economía mixta. Confieren a su propietario la calidad de accionista y, de acuerdo con la legislación ecuatoriana, deben ser nominativas y registradas en el libro de acciones y accionistas. Las acciones pueden ser de dos tipos: ordinarias y preferidas.</p>
+            <p><strong>ACCIONES ORDINARIAS</strong>: Acciones emitidas sin ningún privilegio especial que otorgan iguales derechos a sus tenedores. Confieren todos los derechos fundamentales que en la Ley se reconoce a los accionistas. Solo tendrán derecho a dividendos después de que se haya cubierto a las acciones preferidas.</p>
+            <p><strong>ACCIONES PREFERIDAS</strong>:. No otorgan derecho a voto pero pueden conferir derechos especiales en cuanto al pago de dividendos y en la liquidación de la compañía.</p>
+             
+            <p><strong>ACCIONES LIBERADAS:</strong> Aquellas que otorgan a su titular preferencias o ventajas en la distribución y pago de utilidades y en reembolso de capital, en caso de liquidación; y, que no confieren derecho a voto.</p>
+             
+            <p><strong>ACCIONES PAGADAS:</strong> Es aquella parte de las acciones que efectivamente han sido suscritas y pagadas.</p>
+             
+            <p><strong>ACCIONISTA</strong>: Persona natural o jurídica, a cuyo nombre está emitida una acción de determinada empresa y que se encuentra registrada en el libro de acciones y accionistas de la compañía.</p>
+             
+            <p><strong>ACEPTACIÓN BANCARIA:</strong> Instrumento financiero, normalmente letra de cambio aceptada por un banco. Al aceptar la letra el banco asume el compromiso  de pago al vencimiento, conforme  las condiciones establecidas.</p>
+             
+            <p><strong>ADMINISTRADORA DE FONDOS Y FIDEICOMISOS</strong>:</p>
+             
+            <p><strong>ACTIVO  FINANCIERO</strong>: Se considera como valores de conformidad con lo establecido en la Ley de Mercado de Valores.</p>
+             
+            <p><strong>ACTIVOS FIJOS:</strong> Activos permanentes que son necesarios para llevar a cabo las operaciones habituales de una empresa: la maquinaria, el equipo, los edificios y el terreno.</p>
+             
+            <p><strong>ACTIVO SUBYACENTE:</strong> Es un activo que, en los mercados de productos derivativos, está sujeto a un contrato normalizado y es el objeto de intercambio.  Es decir, es aquel activo sobre el que se efectúa la negociación de un activo derivado.</p>
+             
+            <p><strong>ADMINISTRACION DE PORTAFOLIO</strong>: Actividad desarrollada por las casas de valores en la administración de portafolio de terceros y por las administradoras de fondos de inversión, que hace referencia a la custodia y gestión de los derechos económicos  de los valores que conforman el portafolio.</p>
+             
+            <p><strong>ANOTACION EN CUENTA</strong>: Nota contable efectuada en un registro electrónico, la cual es constitutiva de la existencia de valores desmaterializados, así como de los derechos y obligaciones de sus emisores y d sus legítimos propietarios. Servicio prestado por un depósito centralizado de compensación y liquidación de valores.</p>
+             
+            <p><strong>AGENTE PAGADOR</strong>: El agente pagador, es una figura jurídica utilizada en la emisión de obligaciones, con el propósito de realizar los pagos de intereses y capital, en las fechas y condiciones estipuladas en la escritura de emisión.  Pueden actuar como agente pagador, la misma emisora, o una Institución del Sistema Financiero que se encuentre bajo el control de la Superintendencia de Bancos.</p>
+             
+            <p><strong>AGENTE DE MANEJO:</strong> Es una sociedad Administradora de Fondos y Fideicomisos. Su responsabilidad alcanza únicamente a la buena administración del proceso de Titularización, por lo que no responderá por los resultados obtenidos, a menos que dicho proceso arroje pérdidas causadas por sus actuaciones, declaradas como tales en sentencia ejecutoriada, en cuyo caso responderá por dolo o hasta por culpa leve.</p>
+             
+            <p><strong>ARBITRAJE</strong>: Actividad que consiste en comprar y vender un valor aprovechando las diferencias de precio en diversos mercados o momentos. Constituye una de las fuentes de ingresos de los intermediarios bursátiles y contribuye con la liquidez del mercado y la adecuada formación de precios.</p>
+             
+            <p><strong>ASOCIACIONES GREMIALES</strong>: Son las organizaciones que reúnen a más de la mitad de las personas  jurídicas a nivel nacional que participan  en el mercado de valores con una misma finalidad  en razón de su objeto social, con el fin  de promover la racionalización, desarrollo y protección de sus actividades comunes.</p>
+             
+            <p><strong>AUGE</strong>: Fase del ciclo económico  en el cual se presentan signos evidentes de prosperidad.</p>
+             
+            <p><strong>AUTORREGULACIÓN</strong>: Se entiende por  autorregulación, la facultad que tienen las Bolsas de Valores y las asociaciones gremiales formadas por los entes creados al amparo de la Ley de Mercado de Valores y debidamente reconocidos por la Junta de Política y Regulación Monetaria y Financiera, para dictar sus reglamentos y demás normas internas, así como para ejercer el control de sus miembros e imponer las sanciones dentro del ámbito de su competencia.</p>
+             
+            <p><strong>AUDITORÍA EXTERNA</strong>: Constituye la actividad que realizan personas jurídicas que, especializadas en esta área, dan a conocer su opinión sobre la razonabilidad de los Estados financieros para representar la situación financiera y los resultados de las operaciones de la entidad auditada. También podrán expresar sus recomendaciones respecto de los procedimientos contables y del sistema de control interno que mantiene el sujeto auditado.</p>
+             
+            <p><strong>AVAL:</strong> Letra de cambio avalada por un banco, por lo que cuenta con garantía solidaria.  El dador del aval  quedará obligado  en la misma forma que la persona  quien se constituya garante.</p>
+             
+            <p><strong>AVALADO:</strong> Persona  a favor  de la cual se concede el aval en garantía del cumplimiento de la obligación que ha contraído.</p>
+            <p><strong>AVISO: </strong>Comunicación en la que la casa de valores o funcionario público  autorizado informa de manera electrónica a las bolsas de valores y al mercado en general. sobre  la compra y venta de valores que desea realizar en el mercado bursátil. Este aviso se realizará con la anticipación de al menos treinta minutos (30) del inicio de la rueda o de la subasta, acorde a lo establecido en esta regulación.</p>
+             
+             
+            <p><strong>APALANCAMIENTO FINANCIERO</strong>: Se refiere al efecto que el endeudamiento tiene sobre la rentabilidad. En los mercados de valores, hace referencia al hecho de que con pequeñas cantidades de dinero puede realizarse una inversión que se comporta como otra de un volumen muy superior.</p>
+            <p>&nbsp;</p>
+            <p><strong>B</strong></p>
+             
+            <p><strong>BALANCE: </strong>Estado contable que pertenece a las cuentas  de una empresa, y que refleja  tanto la estructura  económica (activo) como financiera (pasivo) de la misma en un  momento concreto del tiempo (estático).</p>
+            <p><strong>BAJO LA PAR:</strong> Se da cuando el precio de transacción, es inferior a su valor nominal.</p>
+            <p><strong>BANCA DE INVERSIÓN:</strong> Es aquella actividad  especializada en obtener para las empresas privadas  y los gobierno, el dinero o los instrumentos financieros necesarios  para realizar determinada inversión, mediante  la emisión  y venta de valores en los mercados de capitales. Sus funciones principales son:</p>
+            <ol type="a">
+            <li>Participación en el mercado de capitales;</li>
+            <li>Financiamiento estructurado ;y,</li>
+            <li>Asesoría en fusiones, adquisiciones, compra y venta de empresas</li>
+            </ol>
+            <p>Solamente podrán realizar actividades de Banca de Inversión las casas  de valores y el Banco del Instituto Ecuatoriano de Seguridad Social.</p>
+             
+            <p><strong>BENCHMARK:</strong> Es una referencia que se usa para hacer comparaciones. En el ámbito financiero, cualquier índice que se tome como referencia para valorar la eficiencia en la gestión de una cartera, es un benchmark.</p>
+             
+            <p><strong>BENEFICIO BRUTO</strong>: Se refiere a los resultados de una empresa (obtenido por diferencia entre ingresos y gastos), antes de restar el porcentaje de trabajadores y el impuesto a la renta.</p>
+             
+            <p><strong>BENEFICIO NETO</strong>: Se refiere al beneficio bruto, después de restar el porcentaje de trabajadores e impuesto a la renta.</p>
+             
+            <p><strong>BETA</strong>: El coeficiente Beta mide la sensibilidad de la  rentabilidad de un valor respecto a los movimientos de la rentabilidad del índice del mercado.  Beta mide la cantidad de riesgo sistemático asociado a un activo particular, en relación con otro con riesgo promedio.</p>
+             
+            <p><strong>BOLSAS DE VALORES: </strong>Son sociedades anónimas, autorizadas y controladas por la Superintendencia de Compañías, Valores y  Seguros cuyo objeto social único es brindar los servicios y mecanismos requeridos para la negociación de valores. En nuestro país hay dos Bolsas de Valores una en Guayaquil y otra en Quito. Son accionistas de las bolsas de valores las casas de valores.</p>
+             
+            <p><strong>BONOS DE ESTADO</strong>: Son títulos emitidos por el Gobierno Nacional  a través del Ministerio de Economía y Finanzas con el  objeto de obtener financiación.</p>
+             
+            <p><strong>BONOS BASURA</strong>: Títulos emitidos por empresas con calificaciones de alto riesgo y por ende alto rendimiento.</p>
+             
+            <p>&nbsp;</p>
+            <p><strong>C</strong></p>
+             
+            <p><strong>CALIFICACIÓN DE RIESGO</strong>: La actividad que realizan entidades especializadas, denominadas calificadoras de riesgo, mediante la cual den a conocer al mercado y público en general su opinión sobre la solvencia y probabilidad de pago que tiene el emisor para cumplir con  los compromisos provenientes de sus valores de oferta pública.</p>
+             
+            <p><strong>CALIFICADORAS DE RIESGO</strong>: Sociedades anónimas o de responsabilidad limitada que tienen por objeto principal la  calificación de riesgo  de los valores y emisores.</p>
+             
+            <p><strong>CATASTRO PUBLICO DEL MERCADO DE VALORES</strong>: Unidad Administrativa dentro de la Superintendencia de Compañías, Valores y Seguros en la cual se inscribirá la información pública respecto de los emisores, los valores y las demás instituciones  reguladas por la Ley de  Mercado de Valores. Para participar en los mercados bursátil y extrabursátil como requisito previo deberá un emisor estar inscrito en dicho Catastro.</p>
+             
+            <p><strong>CANTIDAD TRANSADA</strong>: Número de unidades del respectivo valor o certificado negociado en un período determinado.</p>
+             
+            <p><strong>CAPITAL</strong>: Son los recursos financieros  de los que dispone una unidad económica o sujeto para realizar una inversión o actividad.</p>
+             
+            <p><strong>CAPITAL SEMILLA</strong>: Modalidad o tipo de inversión de capital de riesgo  donde  la aportación  de recursos  tiene lugar en  la  fase preliminar,  es decir es, es anterior  al inicio de la producción   y distribución masiva del producto o servicio, apenas cuando es un proyecto.</p>
+             
+            <p><strong>CAPITALIZACIÓN</strong>: Reinversión o reaplicación de resultados, utilidades o reservas.</p>
+             
+            <p><strong>CAPTACIÓN</strong>: Proceso mediante el cual, el sistema financiero recoge recursos del público ahorrador  y los utiliza como fuente de mercado  financiero. En el caso de la captación bancaria, son todos los recursos que la banca obtiene a través de sus instrumentos de captación ( cuenta de cheques, cuenta de ahorros, depósitos a plazo fijo, etc.), que conforman los pasivos del sistema bancario e incluyen recursos en moneda de curso legal y extranjera.</p>
+             
+            <p><strong>CASAS DE VALORES:</strong> Compañía anónima autorizada y controlada por la Superintendencia de Compañías, Valores y Seguros  cuya  principal función  es la de actuar como intermediario de valores, es decir, realizar  la compra venta  de  títulos por cuenta de sus clientes.</p>
+             
+            <p><strong>CALCE: </strong>Es el proceso mediante el cual coinciden entre sí las condiciones  de una postura de compra y de venta de acuerdo  a los mecanismos de negociación autorizado, lo que conlleva al cierre de una operación.</p>
+            <p><strong>CALCE AUTOMÁTICO</strong>: Es el proceso mediante el cual las  posturas de oferta y las posturas de demanda de valores de renta variable líquidos o valores de renta fija de colocación primaria, coinciden entre sí, son adjudicadas automáticamente por el sistema, lo que conlleva el cierre de la operación.</p>
+            <p><strong>CALCE CON PUJA</strong>: Es el proceso mediante el cual  las posturas de oferta y las posturas de demandas de valores de renta variable no líquidos o valores de renta fija de colocación secundaria, son expuestos al mercado durante un periodo de tiempo para el inicio del  mejoramiento de precio o rendimiento; en este proceso cualquier intermediario autorizado podrá intervenir formulando una nueva oferta o demanda que será tomada en cuenta para efectos de la adjudicación, la cual se realizará al cierre  de dicho período  y entre las posturas de ofertas y demandas vigentes que tengan mejores condiciones de precio, tasa, según corresponda.</p>
+            <p><strong>CEDENTE</strong>: Persona que transfiere o traspasa a otra un  bien, derecho o acción. En los títulos de crédito susceptibles de giro o  endoso, el cedente equivale al endosante</p>
+             
+            <p><strong>CEDULAS HIPOTECARIAS:</strong> Títulos  que tienen por objeto  captar  recursos para la  actividad de la construcción y  adquisición  de  bienes inmuebles; generan una tasa de interés pagadera  por períodos.</p>
+             
+            <p><strong>CERO CUPON</strong>: Son aquellos valores  vendidos con descuento, por los que no se abona cantidad alguna en concepto de intereses o de amortización, hasta la fecha de vencimiento.</p>
+             
+            <p><strong>CERTIFICADOS DE DEPÓSITO A PLAZO</strong>: Valores emitidos por instituciones financieras. Los plazos, el valor nominal y la tasa de  interés varían según las políticas de cada emisor.</p>
+            <p><strong>CERTIFICADOS DE TESORERIA:</strong> Título emitido por el Ministerio de Economía y Finanzas, en los cuales el  Estado se compromete a cancelar el capital  de los mismos al vencimiento.</p>
+             
+            <p><strong>CESIONARIO</strong>: Persona a cuyo favor se transfiere o traspasa un bien, derecho o acción.</p>
+            <p><strong>CIERRE:</strong> Término de una rueda o sesión bursátil, de acuerdo a los horarios establecidos por las bolsas de valores.</p>
+            <p><strong>CIERRE DE OPERACIÓN:  </strong>Es el perfeccionamiento  de una operación que obliga a ambas partes al cumplimiento de las condiciones  de las respectivas posturas.</p>
+            <p><strong>COLOCACIÓN EN BOLSA</strong>: Negociación destinada a la venta de una nueva emisión de valores, o a la concesión de un préstamo a  largo plazo, a través de los sistemas de negociación de las bolsas de valores.</p>
+            <p><strong>COEFICIENTE BETA</strong>: Compara la variabilidad del precio  de un título en relación con la del mercado. Es el coeficiente de una recta de regresión entre la rentabilidad del título y la del mercado. Si  vale 1, ambas rentabilidades se modifican de la misma manera. Si es inferior a 1, significa que las variaciones de precio son menores en el valor que en el mercado; y si es superior, indica que el precio del valor varia más deprisa que el mercado.</p>
+             
+            <p><strong>COLATERAL</strong>: Activo que se ofrece como garantía adicional, en un crédito o una emisión de bonos. Puesto que supone una reducción del riesgo de crédito, también disminuye el coste de la financiación, es decir, los intereses ofrecidos al inversor.</p>
+             
+            <p><strong>CALL</strong>: Denominada así a la opción de compra</p>
+            <p><strong>CONDICIONES DE LAS POSTURAS: </strong>Las posturas  en firme y de mercado pueden estar sujetas a condiciones de ejecución, en atención al tipo de valor.</p>
+            <p><strong>CONDICIONES EN LA EJECUCIÓN DE VALORES DE RENTA FIJA: </strong>DE VOLUMEN MÍNIMO: Es una postura  que lleva implícita la condición  de negociar  al menos el volumen mínimo determinado al momento de ingreso de la postura. El volumen mínimo no podrá superar la cantidad de diez mil dólares de los Estados Unidos de América ( USD 10.000.00 )</p>
+            <p><strong>CONDICIONES EN LA EJECUCIÓN DE VALORE DE RENTA VARIABLE:</strong></p>
+            <p>a) <strong>Por goteo o volumen oculto</strong>: Muestra al sistema solo una parte del volumen a negociar y se ejecutará el volumen mostrado, el resto se considerará para todos los efectos, como nuevas posturas, cuya características es de volumen oculto.</p>
+            <p>b) <strong>Postura en paquete</strong>: El sistema podrá permitir el ingreso  de ofertas en paquete, cuando el monto que se oferte sea igual o  superior al uno por ciento ( 1%) del capital suscrito de la compañía, a  la fecha de la negociación. El sistema permitirá el ingreso de demandas  en paquete únicamente para calzar tales ofertas.</p>
+            <p><strong>COMISIÓN</strong>: Pago que recibe algún participante del mercado de valores por el servicio que brinda a otro participante.</p>
+             
+            <p><strong>COMITÉ DE VIGILANCIA:</strong> Le corresponde comprobar que el agente de manejo, en el caso de la titularización;  o la administradora de fondos, en el caso del fondo colectivo, cumpla con relación al respectivo  patrimonio lo dispuesto en el Ley de Mercado de Valores y sus normas complementarias.</p>
+            <p><strong>COMPENSACIÓN Y LIQUIDACION DE VALORES:</strong> Mecanismo para determinar contablemente los importes y volúmenes a intercambiar el dinero y valores entre las contrapartes de una operación.</p>
+             
+            <p><strong>CONFLICTO DE INTERÉS</strong>: Es la situación en la que un participante del mercado de valores, en razón de su actividad, encuentre en contraposición sus intereses o los de sus vinculados, con los de sus clientes, contratantes o cualquier persona con la que de alguna manera mantenga una relación jurídica o comercial.</p>
+             
+            <p><strong>COTIZACIÓN BURSATIL</strong>: Precio registrado en una Bolsa cuando se realiza una negociación de valores.</p>
+            <p><strong>COSTO DE OPORTUNIDAD:</strong> Cualquier inversión lleva asociado un costo de oportunidad, que consiste en la rentabilidad que se  hubiese obtenido de haber elegido la mejor alternativa posible.</p>
+             
+            <p><strong>CUPÓN</strong>: Parte de un valor, que da derecho al cobro de sus intereses  o dividendos.</p>
+             
+            <p><strong>CUSTODIO DE VALORES</strong>: Servicio de guarda física  de los valores en un banco o en un depósito centralizado de compensación y liquidación de valores.</p>
+            <p>&nbsp;</p>
+            <p><strong>D</strong></p>
+             
+            <p><strong>DERECHOS FIDUCIARIOS</strong>: Son el conjunto  de derechos que se derivan de la calidad de beneficiario de un fideicomiso mercantil, los cuales representan  el patrimonio autónomo constituido y otorgan el derecho a que la fiduciaria  les transfiera a título oneroso o  gratuito, los activos o el producto de su administración , de conformidad a las instrucciones  señaladas en el contrato constitutivo.</p>
+             
+            <p><strong>DEPOSITO CENTRALIZADO DE COMPENSACION Y LIQUIDACION DE VALORES</strong>:  Son las instituciones públicas o las compañías anónimas autorizadas y controladas por la Superintendencia de Compañías, Valores y Seguros  para recibir en depósito valores inscritos en el Catastro Público de Mercado de Valores, encargarse de su custodia, conservación y brindar los servicios de liquidación y registro de transferencias de los mismos y, operar como cámara de compensación de valores.</p>
+             
+            <p><strong>DERECHOS PATRIMONIALES</strong>: Derechos económicos derivados de la tenencia de un valor, tales como pagos de intereses, dividendos etc.</p>
+            <p><strong>DERIVADOS</strong>: Son productos que derivan de otros productos financieros.  Los derivados no son más que hipotéticas operaciones que se liquidan por diferencias entre el precio de mercado del subyacente y el precio pactado.  Los derivados financieros son productos en los cuales el poseedor  tiene la obligación  o alternativa de: en algún tiempo a futuro comprar o vender un activo financiero. El precio de estos contratos se deriva del precio del activo subyacente.  Por ejemplo las opciones, futuros, etc.</p>
+             
+            <p><strong>DESINTERMEDIACIÓN FINANCIERA</strong>: En el mercado de valores, las empresas captan recursos directamente de los inversionistas  que se los proporcionan, esto se denomina desintermediación financiera,  la cual es propiciada por el mercado de valores ya que este busca ser una fuente de financiamiento de menor costo, acercando directamente al emisor e inversionista, eliminando a un tercero que realice la intermediación de precios. En ese sentido, un mercado de valores eficiente, permitirá que los emisores puedan financiarse a un menor costo y que los inversionistas reciban una mejor retribución por su dinero.  Fenómeno derivado  del desarrollo de los mercados de capitales,  caracterizado por las relaciones directas entre los agentes con necesidad de recibir  financiación y los prestamistas.</p>
+             
+            <p><strong>DESMATERIALIZACIÓN DE VALORES:</strong> Consiste en sustituir  valores físicos  por “Anotaciones Electrónicas en Cuenta”. Estas anotaciones electrónicas  en cuenta poseen la misma naturaleza y contienen en sí, todos los derechos, las obligaciones, condiciones y otras disposiciones que contienen los valores físicos.</p>
+             
+            <p><b>DÍAS</b><strong> BURSÁTILES: </strong>Son los días que las bolsas de valores fijan como laborales.</p>
+            <p><strong>DIVIDENDO</strong>: Valor pagado a favor de los accionistas, en dinero o acciones y eventualmente en bienes, como retribución por su inversión; se otorga en proporción a la cantidad de acciones poseídas y con recursos originados en las utilidades generadas por la empresa en un  determinado período.</p>
+             
+            <p><strong>DIVERSIFICACIÓN DE RIESGOS:</strong> Es un principio básico de la operativa en mercados financieros, según el cual los riesgos pueden controlarse si el importe global que se pretende invertir se distribuye entre productos con diferentes expectativas de rentabilidad y  riesgo. La idea que subyace es que, integrando activos de riesgos opuestos, éstos puede compensarse en distinto grado, de modo que el riesgo del agregado resulte inferior.</p>
+             
+            <p><strong>DOW JONES</strong>: Índice de los principales valores industriales de la bolsa de valores de New York.</p>
+             
+            <p><strong>DURACIÓN</strong>: En términos generales, indica la vida media de un valor de renta fija (calculada mediante el descuento de los flujos de ingresos previstos, ponderados según su cuantía y el tiempo que reste hasta su percepción). Sirve también como instrumento para medir la sensibilidad en el precio de un bono, ante variaciones en los tipos de interés (ofreciendo así una medida del riesgo). La duración indica asimismo en qué momento de la vida del bono, éste puede venderse de manera que se neutralice el riesgo de variaciones en los tipos; es decir, en esa fecha no existe riesgo de tipos.</p>
+             
+            <p><strong>DURACIÓN MODIFICADA</strong>: Para poder utilizar la duración  como medida del riesgo de un valor de renta fija, es necesario ponerla en función de los tipos de interés. La duración modificada, por tanto, indica la volatilidad del precio de un bono, al producirse variaciones en los tipos.</p>
+             
+            <p>&nbsp;</p>
+            <p><strong>E</strong></p>
+             
+            <p><strong>ECU-INDEX</strong>: Es un índice que refleja el desenvolvimiento accionario del Mercado Bursátil Ecuatoriano en su conjunto. Se expresa en, dólares y por sectores económicos.</p>
+             
+            <p><strong>EMISIÓN</strong>: Conjunto de valores que una empresa o institución pone en circulación para captar dinero. En el caso de las sociedades anónimas (públicas o privadas), la emisión puede ser de renta  fija (la deuda) o de renta variable (las acciones). La Ley de Mercado de Valores  exige que las empresas privadas que emitan tanto deuda como acciones para captar ahorro del público, deben estar inscritos en el Catastro Público de Mercado de Valores y sus emisiones deben estar autorizadas por la Superintendencia de Compañías, Valores y Seguros.</p>
+             
+            <p><strong>EMISORES DE VALORES</strong>: Son los entes autorizados para ofertar públicamente los valores que emiten, los cuales están inscritos en el Catastro Público del Mercado de Valores  y en las bolsas de valore,. incluido el Registro Especial Bursátil REB como segmento permanente del mercado de valores.</p>
+             
+            <p><strong>EMISORES PRIVADOS</strong>: Instituciones de carácter privado que colocan valores en el mercado bursátil.</p>
+             
+            <p><strong>EMISORES PÚBLICOS:</strong> Instituciones de carácter estatal facultadas para emitir valores susceptibles de colocación en el mercado bursátil.</p>
+             
+            <p><strong>EMPRESAS VINCULADAS</strong>: Conjunto de entidades que, aunque jurídicamente independientes, presentan vínculos de tal naturaleza en su propiedad, administración, responsabilidad crediticia o  resultados que hacen presumir que la actuación económica y financiera de estas empresas está guiada por los intereses comunes, o que existen riesgos financieros comunes en los créditos que se les otorgan o respecto de los valores que emitan.</p>
+             
+            <p><strong>ENCARGO FIDUCIARIO</strong>: Se denomina así al contrato escrito y expreso por el cual una persona, llamada constituyente, instruye a otra llamada fiduciario, para que de manera irrevocable, con carácter temporal y por cuenta de aquel, cumpla diversas finalidades, tales como de gestión, inversión, tenencia o guarda, enajenación, disposición en favor del propio constituyente o de un tercero llamado beneficiario.</p>
+             
+            <p><strong>ENTIDAD DE CONTRAPARTE CENTRAL</strong>: Entidad que tendrá por objeto mitigar los riesgos de incumplimiento de las obligaciones de efectivo y de instrumentos financieros  derivados que se negocien en el mercado de valores.</p>
+             
+            <p><strong>ENDOSO:</strong> Medio para transmitir la propiedad de un valor. Consiste en una firma o declaración escrita sobre un título valor  a la orden y generalmente al dorso, a través del cual la persona a  quien se giró el título transfiere su propiedad y cualquier derecho inherente.</p>
+             
+            <p><strong>ESCISIÓN</strong>: La junta general de socios podrá acordar la división de   la  compañía (escisión),  en  una  o  más sociedades.</p>
+             
+            <p><strong>ESPECULACIÓN</strong>: Proceso por el cual, en los mercados de valores, un inversor asume una posición de riesgo esperando un beneficio a corto plazo, como resultado de la fluctuación del precio de los activos.</p>
+             
+            <p><strong>ESTADOS FINANCIEROS</strong>: Incluyen los siguientes componentes:</p>
+            <ol type="a">
+              <li>Balance general</li>
+              <li>Estado de Resultados</li>  
+              <li>Estado de evolución patrimonial</li>
+              <li>Estado de flujos de efectivo</li>
+              <li>Cuentas de orden y contingentes</li>
+              <li>Políticas contables y notas explicativas</li>
+            </ol>
+            <p>&nbsp;</p>
+            <p><strong>F</strong></p>
+             
+            <p><strong>FACTORING</strong>: Operación financiera que consiste en la cesión de una cartera de créditos comerciales de una empresa de factoring, a cambio de un importe convenido en un contrato.</p>
+             
+            <p><strong>FECHA VALOR: </strong>Es la fecha en que el comprador y vendedor se comprometen a cumplir los términos de la operación, mediante  la entrega del valor o instrumento financiero vendido, así como del pago del precio acordado.</p>
+             
+            <p><strong>FECHA DE VENCIMIENTO</strong>: Fecha en que el emisor del valor se compromete a pagar el principal más los intereses (de ser el caso) correspondientes.</p>
+             
+            <p><strong>FIDEICOMISO MERCANTIL</strong>: Por el contrato de Fideicomiso Mercantil una o más personas llamadas constituyentes o fideicomitentes transfieren, de manera temporal e irrevocable, la propiedad de bienes muebles o inmuebles corporales o incorporales, que existen o se espera que existan, a un patrimonio autónomo, dotado de personalidad jurídica, para que la sociedad Administradora de Fondos y Fideicomisos, que es su fiduciaria y en tal calidad su representante legal, cumpla con las finalidades específicas instituidas en el contrato  de constitución, bien sea en favor del propio constituyente o de un tercero llamado beneficiario.</p>
+             
+            <p><strong>FIDEICOMITENTE O CONSTITUYENTE</strong>: Persona natural o jurídica que aporta bienes para la constitución de un fideicomiso. Es quien establece las reglas de administración del fideicomiso.</p>
+             
+            <p><strong>FIDUCIARIO:</strong> Administrador de un fideicomiso. La Ley faculta a las Administradoras de Fondos y Fideicomisos y a la Corporación Financiera Nacional.</p>
+             
+            <p><strong>FORWARD</strong>: Contrato privado que representa la obligación de comprar (o vender) un determinado activo en una fecha futura determinada, en un precio preestablecido al inicio del período de  vigencia del contrato.</p>
+             
+            <p><strong>FONDO DE INVERSIÓN</strong>: Patrimonio común integrado por  aportes de varios inversionistas, personas naturales o jurídicas y, las asociaciones de empleados legalmente reconocidas, para su inversión en valores, bienes y demás activos que permite la Ley de Mercado de Valores Correspondiendo la gestión del mismo a una compañía administradora de fondos y fideicomisos, la que actuará por cuenta y riesgo de sus aportantes o partícipes.</p>
+             
+            <p><strong>FONDO DE INVERSIÓN ADMINISTRADO</strong>: Son aquellos que admiten la incorporación, en cualquier momento de aportantes, así como el retiro de uno o varios partícipes. El patrimonio del fondo administrado está dividido en unidades de participación.</p>
+             
+            <p><strong>FONDO DE INVERSIÓN COLECTIVO:</strong> Son aquellos que tienen como finalidad invertir en valores de proyectos productivos específicos. El fondo estará constituido por los aportes hechos por los  constituyentes dentro de un proceso de oferta pública. El patrimonio de los fondos colectivos, están divididos en cuotas de participación mismas que no son rescatables, pero sí negociables a través de las Bolsas de Valores del país.</p>
+             
+            <p><strong>FONDOS COTIZADOS</strong>: Son aquellos fondos que no podrán invertir en proyectos, sino exclusivamente en valores admitidos a cotización bursátil. Estos fondos podrán replicar la misma composición de un índice bursátil.</p>
+             
+            <p><strong>FONDOS INTERNACIONALES</strong>: Fondos Constituidos en el Exterior por nacionales o extranjeros. Estos Fondos podrán actuar en el mercado nacional y constituirse con dineros provenientes de ecuatorianos  o extranjeros.</p>
+             
+            <p><strong>FUTUROS</strong>: Contrato negociado en un mercado organizado  por el que las partes acuerdan la compraventa de una cantidad concreta de un valor (activo subyacente) en una fecha futura predeterminada, y a un precio convenido de antemano.</p>
+             
+            <p><strong>FUSION:</strong> La fusión de las compañías se produce cuando  dos o más compañías se unen para formar una nueva que les sucede en sus  derechos y obligaciones; o cuando una o más compañías son absorbidas por otra que continúa subsistiendo.</p>
+             
+            <p><strong>FLUJO DE CAJA</strong>: Diferencia entre los cobros y pagos efectivamente realizados en un período de tiempo, como consecuencia de la actividad de una compañía</p>
+            <p>&nbsp;</p>
+            <p><strong>G</strong></p>
+            <p><strong>GARANTÍA SOLIDARIA</strong>: Garantía de pago brindada por un  tercero a una obligación de forma tal que el acreedor puede dirigirse a  cobrar el crédito indistintamente al deudor o al garante.</p>
+            <p><strong>GOBIERNO CORPORATIVO</strong>: La facultad de compartir la responsabilidad de la administración y de la toma de decisiones de una empresa, desarrollando la capacidad de su recurso humano, la investigación, la misión, y el presupuesto. El buen gobierno corporativo, busca transparencia, objetividad, equidad en la organización y principalmente la protección a los minoritarios. Ayuda a obtener credibilidad, confianza y buen uso de sus recursos a través de entregar al mercado información necesaria para que los inversionistas puedan conocer las empresas e invertir en ellas.</p>
+            <p>&nbsp;</p>
+            <p><strong>H</strong></p>
+            <p><strong>HACEDOR DE MERCADO</strong>: ( Market Maker): Facultad de las  casas de valores mediante la cual es responsable de ofrecer liquidez sobre acciones, manteniendo constantemente ofertas y demandas sobre éstas, garantizando así la compra o venta por un mínimo determinado.</p>
+            <p><strong>HECHO RELEVANTE</strong>: Es toda noticia que por su importancia afecta a un emisor o a sus empresas vinculadas, de forma tal que influya o pueda influir en la decisión de invertir en valores  emitidos por él o que pueda alterar el precio de sus valores en el mercado.</p>
+            <p>&nbsp;</p>
+            <p><strong>I</strong></p>
+            <p><strong>ILIQUIDEZ:</strong> Dificultad del tenedor de un activo para transformarlo en dinero en cualquier momento.</p>
+             
+            <p><strong>INFORMACIÓN PRIVILEGIADA</strong>: Es el conocimiento de actos, hechos o acontecimientos capaces de influir en los precios de los  valores materia de intermediación en el mercado de valores, mientras tal información no se haya hecho del conocimiento público.</p>
+             
+            <p><strong>INFORMACIÓN RESERVADA</strong>: Son hechos o antecedentes relativos a negociaciones pendientes, que, de ser conocidas, pudieran perjudicar el interés social del mercado. Estas decisiones y su contenido deberán comunicarse reservadamente a la Superintendencia de Compañías, Valores y Seguros el día hábil siguiente a su adopción.</p>
+             
+            <p><strong>INTERÉS:</strong> Cantidad de dinero que recibe una persona por el servicio de prestar su dinero, o costo en que un deudor incurre al hacer uso de un préstamo.</p>
+             
+            <p><strong>INTERES COMPUESTO</strong>: Contablemente, es la forma de calcular el interés, en la que cada período de cálculo el interés se acumula al capital. Esta cifra sirve de base para calcular los intereses  en el siguiente período. El interés efectivo para el acreedor es tanto mayor cuanto más frecuentemente se haga el cálculo. Financieramente, es el originado por la adición periódica del interés simple al principal, formando esta nueva base el capital principal para el cálculo de los intereses posteriores.</p>
+             
+            <p><strong>INTERMEDIACION DE VALORES</strong>: Es el conjunto de actividades, actos y contratos que se los realiza en los mercados bursátil y extrabursátil, con el objeto de vincular las ofertas y las demandas para efectuar la compra o venta de valores.</p>
+             
+            <p><strong>INTENDENCIA NACIONAL DE MERCADO DE VALORES</strong>: Es el área técnica de la Superintendencia de Compañías, Valores y Seguros especializada en el Mercado de Valores que le compete, entre otras funciones: la ejecución de la política general dictada por la Junta de Política y Regulación Monetaria y Financiera; la vigilancia, control, inspección, autorización y registro, promoción e intervención de las compañías, entidades y demás personas que intervengan en el Mercado de Valores.</p>
+             
+            <p><strong>INTERVENCIÓN:</strong> Es la facultad de la Superintendencia  de Compañías, Valores y Seguros declarar la intervención de las entidades reguladas por la Ley de Mercado de Valores con la finalidad  de precautelar los intereses de los inversionistas, socios o accionistas, y terceros, sin perjuicio del establecimiento de las responsabilidades administrativas a que hubiere lugar.</p>
+             
+            <p><strong>INVERSIONES DE CORTO PLAZO</strong>: Títulos valores o instrumentos financieros emitidos a no más de 360 días.</p>
+             
+            <p><strong>INVERSIONES DE LARGO PLAZO:</strong> Títulos valores o instrumentos financieros emitidos a un plazo superior a 360 días.</p>
+             
+            <p><strong>INSIDER TRADING</strong>: Término anglosajón que se refiere a  la persona que utiliza la información privilegiada para invertir en su mercado de valores.</p>
+             
+            <p><strong>IN THE MONEY</strong>: Situación de una opción, en la que el precio de ejercicio es inferior al precio de mercado del subyacente en una opción call, y superior en una put. Tiene un valor intrínseco positivo.</p>
+             
+            <p><strong>INDICE</strong>: Es un instrumento que resume de forma agregada el comportamiento de un conjunto de variables (cotizaciones de valores, precios de bienes o servicios, etc) en un período determinado, a  partir de un valor que se toma como base en una fecha dada.</p>
+             
+            <p><strong>INVERSIONISTAS INSTITUCIONALES</strong>: Constituyen las instituciones del sistema financiero públicas o privadas, Mutualistas de ahorro y crédito para la vivienda, a las cooperativas de ahorro y crédito que realicen intermediación financiera con el público, a las compañías de seguros y reaseguros, a las corporaciones de garantía y retroganrantía, a las sociedades administradoras de fondos y fideicomisos y, toda otra persona jurídica y entidades que la Junta de  Política y Regulación Monetaria y Financiera señale como tal. J</p>
+            <p>&nbsp;</p>
+            <p><strong>J</strong></p>
+             
+            <p><strong>JUNTA GENERAL DE ACCIONISTAS</strong> (shareholders’ meeting): Órgano de gobierno supremo de una sociedad; en ella se adoptan  por mayoría las principales decisiones societarias y estatutarias.</p>
+            <p><strong>JUNTA DE POLITICA Y REGULACION MONETARIA Y FINANCIERA</strong>:  Organismo que es parte de la Función Ejecutiva, responsable de la formulación de las políticas públicas y la regulación y supervisión monetaria, crediticia, cambiaria, financiera, de seguros y valores.</p>
+            <p>&nbsp;</p>
+            <p><strong>L</strong></p>
+             
+            <p><strong>LAPSO DE SUSPENSIÓN: </strong>Es el período de treinta (30) minutos durante el cual el sistema suspende temporalmente el ingreso de posturas, calces y cierres de operaciones de valores de renta variable en la rueda electrónica con calce automático, debido a que el precio de calce de una operación del mismo valor de renta fija o renta variable excede los límites de rangos de precios establecidos;y, activa la subasta por volatilidad con el objeto de que durante dicho periodo el mercado pueda reaccionar presentando posturas de compra o de venta del mismo valor, para definir y equilibrar el nuevo precio de referencia.</p>
+             
+            <p><strong>LEY DE MERCADO DE VALORES</strong>: Se entenderá como Codificación de la Ley de Mercado de Valores y sus reformas.</p>
+             
+            <p><strong>LIQUIDEZ:</strong> Facilidad que tiene el tenedor de un activo para transformarlo en dinero en cualquier momento.</p>
+            <p>&nbsp;</p>
+            <p><strong>M</strong></p>
+            <p><strong>MARGEN</strong>: Diferencial entre el precio de venta y el precio de compra, obteniendo una ganancia o beneficio.</p>
+             
+            <p><strong>MERCADO AL CONTADO O SPOT</strong>: Mercado en el que las obligaciones recíprocas de los contratantes, pago de precio y entrega del bien o valor, se realizan en el mismo instante sin mediar plazo de entrega.</p>
+             
+            <p><strong>MATRIZ DE RIESGO</strong>: Constituye una herramienta de control y de gestión para identificar las actividades ( proceso y productos) más importantes del sujeto obligado, el tipo y nivel de riesgos inherentes a sus actividades , servicios que ofrece; y, factores  exógenos y endógenos que engendran estos riesgos ( factores de riesgo vinculados al lavado de activos y al financiamiento de delitos) igualmente, la matriz de riesgo permite evaluar la efectividad de una adecuada gestión y administración de los riesgos financieros, operativos y legales que impactan la misión de la organización.</p>
+             
+            <p><strong>MERCADO DE VALORES</strong>: Es un espacio económico que reúne a oferentes (emisores) y demandantes (inversionistas) de valores.  El Mercado de Valores, utiliza los mecanismos previstos en la Ley de Mercado de Valores, para canalizar los recursos financieros hacia las actividades productivas, a través de la negociación de valores en los segmentos bursátil y extrabursátil.</p>
+             
+            <p><strong>MERCADO PRIMARIO</strong>: Es aquel en que los compradores y el emisor participan directamente o a través de intermediarios, en la compraventa de valores de renta fija o variable y determinación de los precios ofrecidos al público por primera vez.</p>
+             
+            <p><strong>MERCADO SECUNDARIO</strong>: Comprende las operaciones o negociaciones que se realizan con posterioridad a la primera colocación;  por lo tanto, los recursos provenientes de aquellas, los reciben sus vendedores.</p>
+             
+            <p><strong>MERCADO PRIVADO</strong>: Se consideran negociaciones de Mercado Privado aquellas que se efectúan en forma directa entre comprador y vendedor sin la intervención de intermediarios de valores o inversionistas institucionales, sobre valores no inscritos en el Catastro Público del Mercado de Valores o que estando inscritos sean producto de transferencias de acciones originadas en fusiones, escisiones, herencias, legados donaciones y liquidaciones de sociedades conyugales y de hecho.</p>
+             
+            <p><strong>MERCADO</strong><b>BURSÁTIL</b>: Es el conformado por ofertas, demandas y negociaciones de valores inscritos en el Catastro Público del Mercado de Valores, en las Bolsas de Valores y en el Registro Especial Bursátil ( REB), realizadas por los intermediarios de  valores autorizados de acuerdo a lo establecido en la Ley de Mercado de  Valores.</p>
+             
+            <p><strong>MERCADO EXTRABURSATIL</strong>: Es el mercado primario que se genera entre la institución financiera y el inversor sin la intermediación de un intermediario de valores, con valores genéricos o de giro ordinario de su negocio, emitidos por las instituciones financieras, inscritos en el Catastro Público del Mercado de Valores y en las bolsas de valores.</p>
+             
+            <p><strong>MERCADO DE DINERO</strong>: En este mercado se negocian valores emitidos a plazos menores o iguales a un año, es decir de corto plazo. Estos valores otorgan una tasa de rendimiento fija preestablecida  que se cobra al cabo de su plazo de vigencia.</p>
+            <p><strong>MERCADO DE CAPITALES</strong>: En este mercado se negocian valores emitidos a plazos mayores a un año, es decir de mediano o largo plazo. Por ejemplo, son propias de un Mercado de Capitales las transacciones con acciones o bonos de mediano y largo plazo. Con la emisión de valores de estas características, las empresas o entidades financian sus necesidades de dinero para llevar adelante proyectos de gran envergadura, como ser aumento de capacidad productiva, captación de  nuevos mercados (internos o de exportación), diversificación de actividades, etc.</p>
+             
+            <p><strong>MERCADOS OTC</strong>: Son mercados que no están sujetos a regulación ni supervisión externa. No suelen tener una sede física, y se  negocia por teléfono u ordenador. No existe ningún órgano de compensación y liquidación que garantice el cumplimiento de los compromisos adquiridos por los contratantes; por ello, en estos mercados  suelen operar entidades de gran solvencia.</p>
+            <p>&nbsp;</p>
+            <p><strong>N</strong></p>
+             
+            <p><strong>NORMAS PARA LA PUJA: </strong>La mejora mínima que se acepta en posturas de renta variable es del uno por ciento del valor nominal del valor. Para el caso de valores de renta fija, la mejora mínima será de una centésima de punto sobre la tasa del rendimiento nominal anual y cuando éstos no tengan plazo será de una centésima de punto del precio.</p>
+             
+            <p><strong>NEC</strong>: Normas Ecuatorianas de Contabilidad adaptadas de las NIC</p>
+             
+            <p><strong>NIIF</strong> (Normas Internacionales de Información Financiera): Conjunto de normas e interpretaciones contables emitidas por el Consejo de Normas Internacionales de Contabilidad ( IASB), que es el organismo independiente creado para establecer normas contables de  aplicación mundial.</p>
+             
+            <p><strong>NEGOCIABLE</strong>: Calificativo de los títulos susceptibles de negociación, que pueden ser transmitidos o cedidos o enajenados según las peculiaridades propias del tipo del que se trate.</p>
+             
+            <p>Número CUSIP: Un número CUSIP identifica, de forma específica y a nivel mundial, a la mayoría de los valores que se negocian en los mercados regulados de América.</p>
+            <p>&nbsp;</p>
+            <p><strong>O</strong></p>
+             
+            <p><strong>OBLIGACIONES:</strong> Son valores de contenido crediticio representativos de deuda a cargo del emisor que podrán ser emitidos por  personas jurídicas de derecho público o privado, sucursales de compañías extranjeras domiciliadas en el Ecuador, y por quienes establezca la Junta de Política y Regulación Monetaria y Financiera.</p>
+             
+            <p><strong>OBLIGACIONES CONVERTIBLES EN ACCIONES</strong>: Las compañías  anónimas, podrán emitir obligaciones convertibles en acciones, que darán derecho a su titular o tenedor para exigir alternativamente o que el emisor le pague el valor de dichas obligaciones, conforme a las disposiciones generales, o las convierta en acciones de acuerdo a las condiciones estipuladas en la escritura pública de emisión. La conversión puede efectuarse en época o fechas determinadas o en cualquier tiempo a partir de la suscripción, o desde cierta fecha o plazo.</p>
+            <p><strong>OBLILGACIONES A CORTO PLAZO O PAPEL COMERCIAL</strong>: Las compañías emisoras inscritas en el Catastro Público de Mercado de Valores podrán emitir obligaciones a corto plazo con garantía general, también denominado papel comercial con plazo inferior a trescientos sesenta días.</p>
+             
+            <p><strong>OBLIGACIONES CON CUPÓN CERO</strong>: Son obligaciones que no  pagan intereses periódicos durante su vigencia. La rentabilidad para el  inversor viene determinada por la diferencia entre el precio de adquisición y el precio de reembolso. Es habitual que se negocien con descuento.</p>
+             
+            <p><strong>OFERTA PÚBLICA DE VALORES:</strong> Es la propuesta dirigida  al público en general, o a sectores específicos de éste, de acuerdo a las normas de carácter general que para el efecto dicte la Junta de Política y Regulación Monetaria y Financiera, con el propósito de negociar valores en el mercado. Tal oferta puede ser primaria o secundaria.</p>
+             
+            <p><strong>OFERTA PUBLICA PRIMARIA</strong>: Es la que se efectúa con el objeto de negociar, por primera vez, en el mercado, valores emitidos para tal fin.</p>
+             
+            <p><strong>OFERTA PÚBLICA SECUNDARIA:</strong> Es la que se efectúa con el objeto de negociar en el mercado, aquellos valores emitidos y colocados previamente.</p>
+             
+            <p><strong>OFERTA PUBLICA DE ADQUISICIÓN</strong>: Es la Oferta Púbica efectuada por una persona natural o jurídica, sola o en conjunto con otras personas, para adquirir acciones u obligaciones convertibles en acciones , o ambas, de una compañía inscrita en bolsa, en condiciones que permitan a los adquirientes alcanzar su toma de control.</p>
+             
+            <p><strong>OPCIONES:</strong> Es el derecho a comprar o vender algo en el futuro a un precio pactado, a diferencia de los futuros en las opciones se realiza una transacción en el momento de su contratación. Así el que compra la opción paga una prima por disfrutar del derecho adquirido mientras que quién lo vende cobra la prima. El comprador, si llegado el momento del vencimiento, siempre podrá optar por ejercitar o no su opción siendo el riesgo que corre igual a la prima pagada. El vendedor está a expensas de lo que decida el comprador y por tanto es habitual que utilice la prima cobrada para comprar otras opciones que le  permitan fijar el riesgo asumido. Este hecho hace que sea habitual por parte de las entidades financieras ofrecer a sus clientes la posibilidad  de comprar opciones pero no la posibilidad de venderlas.</p>
+             
+            <p><strong>OPERACIÓN</strong>: Toda transacción de valores que se realiza en bolsa. Puede ser clasificada según el tipo de mercado, el intermediario y el plazo de liquidación.</p>
+             
+            <p><strong>OPERACIONES DE CONTADO</strong>: En otros mercados, las operaciones de contado operan desde (t+0 hasta t+3) entendiéndose como t, el día de la negociación y de 0 a 3 los días útiles hasta cuando la bolsa de valores procederá a la compensación y liquidación de dichos valores.</p>
+             
+            <p><strong>OPERACIONES A PLAZO</strong>: Operaciones en las que las partes acuerdan realizar la entrega del dinero y la de los valores en una determinada fecha en el futuro.</p>
+             
+            <p><strong>OPERACIONES CRUZADAS</strong>: Es la operación en la cual una  misma casa de valores, resulta compradora y vendedora de un mismo valor  o instrumento financiero; pero actuando a nombre de comitentes distintos o para su propio portafolio. Las operaciones cruzadas podrán realizarse únicamente utilizando la metodología de calce con puja dentro del mecanismo de rueda electrónica.</p>
+             
+            <p><strong>OPERADORES DE VALORES:</strong> Las Casas de Valores negocian  en el Mercado a través de los Operadores de Valores, inscritos en el Registro del Mercado de Valores, quienes son personas naturales calificadas por las Bolsas de Valores y que deben actuar bajo responsabilidad solidaria con sus respectivas Casas.</p>
+             
+            <p><strong>ORIGINADOR</strong>: Consiste en una o más personas naturales  o jurídicas, de derecho público o privado, públicas, privadas o mixtas,  de derecho privado con finalidad social o pública, nacionales o extranjeras, o entidades dotadas de personalidad jurídica, propietarios de activos o derechos sobre flujos susceptibles de ser titularizados.</p>
+            <p>&nbsp;</p>
+            <p><strong>P</strong></p>
+             
+             
+            <p><strong>PARAÍSO FISCAL:</strong> Es la denominación con que se hace referencia a aquellos países que aplican una presión fiscal inferior a la habitual (y también, a menudo, una regulación financiera menos estricta). De esta manera, consiguen captar importantes volúmenes de capitales internacionales.</p>
+             
+            <p><strong>PARTICIPANTES DEL MERCADO DE VALORES</strong>: Son aquellas personas naturales o jurídicas que intervienen de forma directa en el mercado de valores, como son: emisores, casas de valores, administradoras de fondos y fideicomisos; bolsas de valores, depósitos centralizados de compensación y liquidación de valores; calificadoras de  riesgo, auditoras externas, operadores, representante de los obligacionistas, asociaciones gremiales y demás participantes que, de cualquier manera actúen en el mercado de valores.</p>
+            <p><strong>PAPEL COMERCIAL</strong>: Las compañías emisoras inscritas en  el Catastro Público del Mercado de Valores podrán emitir obligaciones a  corto plazo con garantía general, también denominado papel comercial con plazo inferior a trescientos sesenta días.</p>
+             
+            <p><strong>PASIVOS</strong>: Obligaciones totales que una empresa tiene con terceros en el corto y largo plazo. Estas pueden ser compromisos bancarios (pasivo bancario), con proveedores (cuentas por pagar comerciales) o con inversionistas en el caso de las empresas que emiten certificados de inversión.</p>
+             
+            <p><strong>PATRIMONIO</strong>: Valor líquido del total de los bienes de  una persona o una empresa. Contablemente es la diferencia entre los activos y los pasivos.</p>
+             
+            <p><strong>PATRIMONIO AUTÓNOMO O DE PROPÓSITO EXCLUSIVO</strong>: Es un patrimonio independiente integrado inicialmente por los activos transferidos por el originador y, posteriormente por los activos , pasivos, y contingentes que resulten o se integren como consecuencia del desarrollo del respectivo proceso de titularización. Dicho patrimonio de propósito exclusivo deberá instrumentarse bajo la figura de un fideicomiso mercantil, de conformidad con lo que establece la Ley,</p>
+             
+            <p>Patrimonio independiente integrado inicialmente por los activos transferidos por el Originador y posteriormente por los activos, pasivos y contingentes que resulten o se integren como consecuencia del  desarrollo de un proceso de titularización.</p>
+             
+            <p>Cada patrimonio autónomo está dotado de personería jurídica, siendo el fiduciario su representante legal.</p>
+             
+            <p><strong>PERFIL DEL CLIENTE:</strong> Es el conjunto de elementos que permite determinar, con aproximación el tipo, magnitud y periodicidad de  los servicios que el cliente utilizará durante un determinado período de tiempo.</p>
+             
+            <p><strong>PERÍODO DE CARENCIA:</strong> Suele hacer referencia al período que transcurre entre la emisión del empréstito y la primera amortización del capital; se llama período de carencia porque durante el  mismo sólo se pagan intereses, pero no se devuelve principal.</p>
+            <p><strong>PERIODO DE PUJA: </strong>Es el lapso de diez (10) minutos en  que se permite la mejora de precio, para calzar una postura o realizar una operación cruzada. Durante dicho período cualquier operador podrá intervenir formulando una nueva oferta o demanda con el objeto de que sea tomada en cuenta para efectos de la adjudicación.</p>
+             
+            <p><strong>PORTAFOLIO</strong>: Se denomina portafolio o cartera al conjunto de inversiones, o combinación de activos financieros que constituyen el patrimonio de una persona o entidad.</p>
+             
+            <p><strong>POSICIÓN CORTA:</strong> Es la que tiene un inversor que ha vendido un activo, o que ha asumido un compromiso de venta.</p>
+             
+            <p><strong>POSICIÓN LARGA</strong>: Es la que tiene un inversor que ha comprado un activo, o que ha asumido un compromiso de compra.</p>
+             
+            <p><strong>POSTURAS:</strong> Son propuestas de compra o venta de una cantidad de valores a un determinado precio que realizan los Operadores de Valores o los funcionarios designados por las Instituciones Públicas,  con el propósito de concretar una negociación.</p>
+             
+            <p><strong>PRECIO</strong>: Es el valor efectivo o monetario de un determinado bien.</p>
+             
+            <p><strong>PRECIO DE MERCADO</strong>: Se trata del precio en el que se iguala la oferta y la demanda. En los mercados financieros se llama cotización.</p>
+             
+            <p><strong>PRIMA</strong>: Diferencial en una tasa de interés por incremento de riesgo o, el diferencial entre la tasa nominal de interés  y la tasa de inflación, a lo que por lo general se denomina interés real. Si la prima es positiva, el empréstito se suscribe por encima de la par, y si es negativa por debajo.</p>
+             
+            <p><strong>PRIMA DE RIESGO</strong>: Es la mayor rentabilidad que un inversor exige a un activo, por aceptar el riesgo que incorpora en relación a los activos que se consideran libres de riesgo (generalmente,  se emplea como referencia la deuda pública al plazo de la inversión). Por eso las emisiones de empresas privadas ofrecen tipos más altos que la deuda pública: cualquier emisor privado, por muy solvente que sea, conlleva un riesgo superior al del Estado. También para la inversión en acciones se exige mayor remuneración cuanto mayor sea el riesgo esperado  (mayor prima de riesgo), en función de la coyuntura de los mercados.</p>
+             
+            <p><strong>PRINCIPAL</strong>: Valor nominal de un activo financiero. Cantidad nominal presentada en el momento inicial y sobre la que se calculan los intereses por la aplicación del tipo de interés.</p>
+             
+            <p><strong>PROSPECTO:</strong> Documento que contiene las características concretas de los valores a ser emitidos y, en general, los datos e información relevantes respecto del emisor, fondo colectivo y  valores provenientes de procesos de titularización.</p>
+             
+            <p><strong>PROVISIÓN:</strong> Reserva que debe hacerse frente a una pérdida.</p>
+            <p><strong>PUJA</strong>: Es la acción de mejora de precio en la oferta  o en la demanda, que realizan los operadores de valores durante el “periodo de puja” de la rueda electrónica.</p>
+            <p><strong>Por el lado de la demanda, </strong>la puja es  la acción de mejoramiento de precios en el cual la asignación de la operación corresponde a la postura de demanda que presenta el precio más alto, de entre aquellas posturas que superan el precio de calce.</p>
+            <p><strong>Por el lado de la oferta</strong>, la puja es la acción de mejoramiento de precios en el cual la asignación de la operación corresponde a la postura de oferta que presente el precio más bajo, de entre aquellas posturas que se encuentren por debajo del precio de calce.</p>
+            <p><strong>PUT</strong>: Denominada así a la opción de venta.</p>
+            <p>&nbsp;</p>
+            <p><strong>R</strong></p>
+            <p><strong>RANGO DE PRECIO DE VALORES DE RENTA VARIABLE: </strong>Es el precio máximo y el precio mínimo permitidos para el calce de una operación de valores de renta variable. El rango inicial para el día, resulta de la aplicación del porcentaje de variación permitido, al precio de cierre del día anterior. El porcentaje de variación para efectos del establecimiento de rango de precio es:</p>
+            <p>1.- Valores líquidos: Son aquellos que han sido objeto de operaciones  cerradas durante al menos siete ( 7 )ruedas dentro de los últimos treinta (30) días bursátiles. El porcentaje de variación es del diez 10%  para calcular el rango mínimo y máximo sobre el último precio de cierre.</p>
+            <p>2.- Valores no líquidos: Son aquellos que no cumplan la condición establecida en el literal a). No existen límites para el porcentaje de variación.</p>
+             
+             
+            <p><strong>RECOMPRA O REPORTO BURSATIL</strong>: Operación en la que una  persona (comprador a plazo) vende un valor hoy y se compromete a recomprarlo de nuevo en un plazo determinado, reconociéndole a su contraparte (vendedor a plazo) un rendimiento por el tiempo que estuvo vigente el contrato.</p>
+             
+            <p><strong>REGISTRO ESPECIAL BURSATIL (REB)</strong>: Con el fin de desarrollar el mercado de valores y ampliar el número de emisores y valores que se negocien en mercados regulados se crea dentro del mercado  bursátil el Registro Especial Bursátil REB como un segmento permanente del mercado bursátil en el cual se negocian únicamente valores de las empresas pertenecientes al sector económico de pequeñas y/o medianas empresas y de las organizaciones de la economía popular y solidaria que por sus características específicas, necesidades de política económica y  el nivel de desarrollo de estos valores y/o sus emisores ameriten la necesidad de negociarse en un mercado específico y especializado para esos valores, y siempre que se observe la regulación diferenciada establecida por la Junta de Política y Regulación Monetaria y Financiera  y se cuente con la autorización de la Superintendencia de Compañías, Valores y Seguros.</p>
+             
+            <p><strong>RENDIMIENTO:</strong> Ganancia que se obtiene al invertir en un valor, depende del precio pagado por la inversión y del pago esperado  de intereses o dividendos.</p>
+             
+            <p><strong>REPRESENTANTE DE LOS OBLIGACIONISTAS</strong>: El representante de los obligacionistas es una persona jurídica especializada en tal objeto, que es contratada por la compañía emisora, para que se encargue de velar por los intereses de los obligacionistas (personas que compran obligaciones de un emisor), durante la vigencia de  la misma.</p>
+             
+            <p><strong>RIESGO</strong>: Desde un punto de vista financiero, el riesgo significa incertidumbre sobre la evolución de un activo, e indica  la posibilidad de que una inversión ofrezca un rendimiento distinto del  esperado (tanto a favor como en contra del inversor).</p>
+            <p><strong>RIESGO DE CONTRAPARTE</strong>: Riesgo de que una de las partes no entregue el valor o el dinero correspondiente a la transacción en la fecha de liquidación.</p>
+             
+            <p><strong>RIESGO DE LIQUIDEZ:</strong> Riesgo de no poder vender o transferir un instrumento en el momento deseado y a un precio razonable.</p>
+             
+            <p><strong>RIESGO DE PRECIO</strong>: Riesgo de pérdida por variaciones en los precios de los instrumentos frente a los precios del mercado.</p>
+             
+            <p><strong>RIESGO DE INSOLVENCIA</strong>: Riesgo de pérdida ocasionada por el incumplimiento de pago del emisor.</p>
+             
+            <p><strong>RIESGO DE TASA DE INTERÉS</strong>: Riesgo de pérdida ocasionada por cambios inesperados en las tasas de interés del mercado.</p>
+             
+            <p><strong>RIESGO JURIDICO:</strong> Riesgo derivado de situaciones de orden legal que puedan afectar la titularidad de la inversiones.</p>
+             
+            <p><strong>RIESGO SISTÉMICO</strong>: También llamado riesgo de mercado,  es debido a factores de riego generales, tales como cambios en el ciclo  económico, reforma impositiva, etc. Este riesgo afecta a todo tipo de valores.</p>
+            <p><strong>RIESGO NO SISTEMICO</strong>: El Riesgo no sistémico es único  y particular de cada compañía. Estos factores no sistemáticos pueden variar desde una huelga que afecte al sector o a la empresa, la aparición en el mercado de un nuevo competidor, el nivel de endeudamiento, etc. Este tipo de riesgo, es posible eliminar casi totalmente con la diversificación.</p>
+             
+            <p><strong>RIESGO DE REINVERSIÓN</strong>: Es el que asume el tenedor de  un valor de renta fija, como consecuencia del efecto que pueda tener la  evolución de los tipos de interés al volver a invertir los flujos derivados de su inversión. Se produce siempre por los flujos de caja generados, y también por el reembolso del principal o por el precio de mercado del activo, en caso de que el horizonte temporal de la inversión  no coincida con la fecha de vencimiento de éste. Las variaciones de los  tipos de interés producirán una mayor o menor rentabilidad en la reinversión de los flujos de caja, respecto de la inicialmente prevista;  por otro lado, al vencimiento del activo, si es necesario reinvertir el  capital, el nivel de los tipos de interés determinará una mayor o menor  rentabilidad de la inversión en el último periodo. En los bonos cupón cero no existe riesgo de reinversión atribuible porque se percibe un único flujo, al vencimiento.</p>
+             
+            <p><strong>RIESGO PAÍS</strong>: Es el riesgo de crédito de una inversión, que no depende de la solvencia del emisor, sino de la de su país de origen. Por ejemplo, hay riesgo país si existe la posibilidad de  que un Estado decida suspender la transferencia de capitales al exterior, bloqueando los pagos, o retirar en su caso el aval público a una entidad; algunos países incluso han suspendido, en un momento u otro, los pagos de intereses y/o principal de la deuda pública.</p>
+             
+            <p><strong>RUEDA DE BOLSA</strong>: Es la reunión o sistema de interconexión de Operadores de Valores que, en representación de sus respectivas Casas de Valores, realizan transacciones con valores inscritos en el Catastro Público del Mercado de Valores y en Bolsa.</p>
+             
+            <p>Pueden también participar en las citadas Ruedas funcionarios especialmente designados por las Instituciones del Sector Público para realizar negociaciones de valores, exclusivamente por cuenta de dichas Entidades, de conformidad con las disposiciones establecidas en la Ley.</p>
+             
+            <p><strong>RUEDAS ORDINARIAS</strong>: Se realizan en forma regular y permanente todos los días hábiles del año, dentro del horario específicamente señalado.</p>
+             
+            <p><strong>RUEDAS EXTRAORDINARIAS</strong>: Se efectúan en horario diferente al de las Ruedas Ordinarias y en condiciones especiales, de acuerdo a los participantes, clases de valores, requerimientos de diversificación o amplitud del mercado.</p>
+             
+            <p><strong>RUEDAS DE PISO</strong>: Estas Ruedas, conocidas también como  de Viva Voz, se realizan en el recinto bursátil, con la concurrencia y participación física de los Operadores de Valores, en representación de sus respectivas Casas de Valores miembros de una Bolsa, y los funcionarios designados por las Instituciones del Sector Público.</p>
+             
+            <p><strong>RUEDAS ELECTRÓNICAS</strong>: Es el mecanismo de negociación  de valores inscritos en el Catastro Público del Mercado de Valores y en  las Bolsas de Valores, en el cual se efectúan las ofertas, demandas, calces y cierres de operaciones, acorde a las metodologías de negociación establecida.</p>
+            <p>&nbsp;</p>
+            <p><strong>S</strong></p>
+             
+            <p><strong>SIGILO BURSÁTIL</strong>: Es la prohibición de no divulgar a las personas o instituciones que en ejercicio de sus funciones u obligaciones de vigilancia, fiscalización y control tuvieren acceso a información privilegiada, reservada o que no sea de dominio público, de  no divulgar la misma, ni aprovechar la información para fines personales o a fin de causar variaciones en los precios de los valores o  perjuicio a las entidades del sector público o del sector privado.</p>
+             
+            <p><strong>SOBREVALORACIÓN</strong>: Valoración de los activos por encima del valor real de mercado.</p>
+             
+            <p><strong>SOBRE LA PAR</strong>: Un título se emite o negocia sobre la par cuando el precio es superior a su valor nominal.</p>
+             
+            <p><strong>SOCIEDAD ADMINISTRADORA DE FONDOS Y FIDEICOMISOS</strong>: Sociedad anónima cuyo objeto social está limitado a:</p>
+             
+            <ol>
+            <li>a) administrar fondos, de inversión.</li>
+            </ol>
+             
+            <ol>
+            <li>b) Administrar negocios fiduciarios</li>
+            </ol>
+             
+            <ol>
+            <li>c) Actuar como emisores de procesos de titularización; y,</li>
+            </ol>
+             
+            <ol>
+            <li>d) Representar fondos internacionales de inversión.</li>
+            </ol>
+             
+             
+            <p><strong>SOLVENCIA:</strong> Capacidad de pago de las obligaciones.</p>
+             
+            <p><strong>SPREAD</strong>: Término inglés utilizado en los mercados financieros para indicar el diferencial de precios, de rentabilidad, crediticio, etc., de un activo financiero.</p>
+             
+            <p><strong>STAKEHOLDERS</strong>: Personas o grupos, además de los accionistas, que tienen especial interés o ejercen influencia sobre las  operaciones de la empresa y la consecución de sus objetivos, tales como acreedores, empleados, proveedores, clientes y la comunidad general.</p>
+             
+            <p><strong>SISTEMA UNICO BURSATIL</strong> (SIUB): Es un sistema de negociación bursátil que tiene por objeto, permitir a través de una plataforma informática la negociación de valores e instrumentos financieros inscritos en el Catastro Público del Mercado de Valores y en las Bolsas de Valores incluso aquellos que se negocien en el Registro  Especial Bursátil ( REB).</p>
+             
+            <p><strong>SUBASTA</strong>: Mecanismo que permite a los emisores captar  a través de las bolsas de valores mediante la selección de diferentes ofertas de compra realizadas por las Casas de Valores.</p>
+            <p><strong>SUBASTA POR VOLATILIDAD</strong>: Es la metodología de negociación de valores de renta variable líquidos que se activan automáticamente en la rueda electrónica cuando dichos valores superan los límites de rango de precios, con el objeto de definir y equilibrar el nuevo precio de referencia. Activada la misma los operadores de valores pueden participar dentro de un periodo de treinta (30) minutos presentando nuevas posturas de oferta o demanda del mismo valor a fin de  que sean consideradas para el efecto de adjudicación por el sistema.</p>
+            <p><strong>SUBASTA SERIALIZADA PARA LA NEGOCIACIÓN DE VALORES DEL SECTOR PUBLICO Y PRIVADO:</strong>  Es un mecanismo de negociación de valores inscritos en el Catastro Público del Mercado de Valores y en las Bolsas de Valores, en el cual dentro de un periodo de negociación se efectúa la presentación de avisos  de ofertas y demandas, calces y cierres de operaciones, acorde a las normas establecidas por la Junta de Política y Regulación Monetaria y Financiera.</p>
+            <p>En este mecanismo, que es implementado a través de la plataforma informática provista por el Sistema Único Bursátil- SIUB- y, brindado por las bolsas de valores para la negociación bursátil de los valores en  el horario que determinen en sus normas de autoregulación, participan únicamente las casas de valores a través de sus operadores y los funcionarios públicos autorizados.</p>
+             
+            <p><strong>SUSPENSIÓN O CANCELACION DE LA OFERTA PUBLICA</strong>: La Superintendencia de Compañías, Valores y Seguros mediante resolución fundamentada, podrá suspender o cancelar una oferta pública, cuando se presenten indicios de que en las negociaciones, objeto de la oferta, se ha procedido en forma fraudulenta o si la información proporcionada no cumple los requisitos de la Ley de Mercado de Valores, es insuficiente o  no refleja adecuadamente la situación económica, financiera y legal del  emisor.</p>
+             
+            <p><strong>SUPERINTENDENCIA DE COMPAÑÍAS VALORES Y SEGUROS </strong></p>
+             
+            <p>La Superintendencia de Compañías, Valores y Seguros es el organismo técnico y con autonomía administrativa, económica, y financiera, que vigila y controla la organización, actividades, funcionamiento, disolución y liquidación de las compañías y otras entidades, en las circunstancias y condiciones establecidas en la Ley. Ejercerá la vigilancia, auditoría , intervención, control y supervisión del mercado de valores, del régimen de seguros y de las personas jurídicas de derecho privado no financieras para lo cual se regirá por las disposiciones de la Ley de Compañías, Ley de Mercado de Valores, Ley General de Seguros, Código Orgánico Monetario y Financiero y las regulaciones que emita la Junta de Política y Regulación Monetaria y Financiera.</p>
+             
+            <p>&nbsp;</p>
+            <p><strong>T</strong></p>
+             
+            <p><strong>TASA LIBOR (LONDON INTERBANK OFFERED RATE</strong>): Tasa de interés de corto plazo que los bancos comerciales de Londres se cobran entre sí para los préstamos en dólares. Se calcula como un promedio de las cotizaciones de los bancos más importantes en Londres a las 11 a.m. hora local. La importancia de la tasa Libor es dada porque varios emisores de obligaciones por ejemplo, toman ésta como base, para el pago de intereses.</p>
+             
+            <p><strong>TASA PRIME</strong>: Es la tasa preferencial a la que prestan  los bancos comerciales, en los mercados de Nueva York y Chicago. La tasa prime constituye una tasa mundial que varía constantemente en función de la demanda del crédito y de la oferta monetaria; pero también  en función de las expectativas inflacionarias y los resultados de la cuenta corriente en la balanza de pagos de los Estados Unidos de América.</p>
+             
+            <p><strong>TASA ANUAL EQUIVALENTE, TEA</strong>: Es un tipo de interés teórico a un año, que permite establecer comparaciones entre activos con  distintos plazos de vencimiento y condiciones contractuales. Mediante una fórmula matemática, se obtiene el tipo que, en un momento dado, igualaría el valor de la inversión con el valor actual de todos los flujos de cobros y pagos previstos (cupones, amortización del principal,  etc.).</p>
+             
+            <p><strong>TASA DE DESCUENTO</strong>: Tipo de interés que se utiliza para calcular el valor actual de los flujos de fondos que se obtendrán en el futuro. Cuanto mayor es la tasa de descuento, menor es el valor actual neto.</p>
+             
+            <p><strong>TASA INTERNA DE RETORNO, TIR</strong>: Tasa de descuento que,  aplicada a los flujos monetarios ( intereses y amortización del principal), hace que su valor presente se iguale al precio.</p>
+            <p><strong>TASA DE RENDIMIENTO SOBRE UNA INVERSIÓN DE ACTIVOS: </strong>Se  calcula encontrando la tasa de descuento que iguala al valor presente neto de los flujos futuros efectivo, con el costo de la inversión.</p>
+            <p><strong>TAG ALONG (Derecho de Coventa</strong>): Es el derecho de los  accionistas minoritarios de recibir en el caso de transferencia de control, el mismo valor pagado a los accionistas mayoritarios por la venta de las acciones.</p>
+            <p><strong>TIPO DE INTERÉS LIBRE DE RIESGO</strong>: Es el que ofrecen los activos que se consideran virtualmente libres de riesgo; normalmente, se atribuye tal cualidad a la deuda pública en sus distintos plazos.</p>
+            <p><strong>TIPOS DE POSTURA: Se permiten dos tipos de posturas:</strong></p>
+            <ol>
+            <li>En firme: son aquellas que se inscriben con precio definido. Toda postura cruzada es en firme; el operador está obligado a indicar en la inscripción que se trata de una orden cruzada, el precio y condiciones de la postura. Toda postura de valores de renta fija es en firme.</li>
+            <li>De mercado: Son aquellas que deben ser ejecutadas al mejor precio de compra o de venta.</li>
+            </ol>
+            <p><strong>TÍTULARIZACIÓN</strong>: Proceso mediante el cual se emiten valores que son susceptibles de ser colocados y negociados libremente  en el mercado bursátil y cuya emisión se la hace con cargo a un patrimonio autónomo.</p>
+             
+            <p><strong>TITULOS NOMINATIVOS</strong>: Títulos que se emiten a favor de una persona en particular y sus derechos son transferibles mediante cesión. Esta transferencia debe registrarse ante el emisor en un libro especial para el efecto.</p>
+             
+            <p><strong>TÍTULOS A LA ORDEN</strong>: Títulos que se emiten a favor de  una persona determinada y a otra indeterminada que ha de concretar la primera. Sus derechos son transmisibles mediante simple endoso, el que debe quedar expresado en el mismo título.</p>
+             
+            <p><strong>TÍTULOS AL PORTADOR:</strong> Valores que se emiten sin indicar a favor de quien se ejecutará el pago al vencimiento. La propiedad de los derechos se la prueba con la simple tenencia del título.</p>
+             
+            <p><strong>TÍTULOS CERO CUPÓN</strong>: Valores cuyo rendimiento no reconoce en forma explícita bajo la forma de intereses sino a través de descuentos sobre su valor nominal.</p>
+             
+            <p><strong>TÍTULOS DE RENTA FIJA:</strong> Valores que generan una renta  predeterminada a sus tenedores, es decir, que ésta no depende de los resultados financieros del emisor ni de las condiciones del mercado.</p>
+             
+            <p><strong>TÍTULOS DE RENTA VARIABLE</strong>: Valores en los que la renta esperada es incierta pues depende de los resultados financieros de  la empresa o se afecta según se modifiquen las condiciones del mercado.</p>
+             
+            <p><strong>TRANSPARENCIA:</strong> Cualidad de un mercado bursátil, en el que existe un flujo adecuado y suficiente de información de las empresas y los mercados.</p>
+            <p>&nbsp;</p>
+            <p><strong>U</strong></p>
+            <p><strong>UNIDAD DE POSTURA: </strong>Es la unidad básica y particular de un determinado valor bursátil. Toda postura debe ser múltiplo a la unidad de postura asociada al valor. Se define las siguientes unidades de postura:</p>
+            <ol>
+            <li><strong>Lote máximo: Es el factor de cantidad (que se adiciona al mínimo) en que se puede cotizar en el mercado bajo lote o fraccionar una  operación,establecido por el emisor.</strong></li>
+            <li>Lote mínimo: Es el valor mínimo que se puede cotizar en cada uno de los valores establecidos por las bolsas de valores. Si el proponerte no estipulare un lote mínimo al inscribir su postura se entenderá que la postura puede ser asignada en múltiplos de unidades de postura. El lote mínimo que puede estipularse no puede exceder al valor del lote máximo del valor que se propone.</li>
+            <li>La fracción que resulte al dividir la postura en lotes mínimos serán asignada sin división, es decir en paquete.</li>
+            </ol>
+             
+            <p><strong>UNDERWRITING:</strong> Por el contrato de underwriting una entidad autorizada para el efecto y una persona emisora o tenedora de valores convienen en que la primera asuma la obligación de adquirir una emisión, o un paquete de valores, o garantizar su colocación o venta en el mercado, o la realización de los mejores esfuerzos para ello.</p>
+             
+            <p>&nbsp;</p>
+            <p><strong>V</strong></p>
+             
+            <p><strong>VALORACION DE CARTERAS A PRECIO DE MERCADO</strong>: Consiste  en la valoración de los títulos que forman parte de una cartera de inversión, a través de la estimación del valor razonable que éstos tendrían en el mercado en un momento dado.</p>
+             
+            <p><strong>VALOR</strong>: Derecho o conjunto de derechos de contenido esencialmente económico, negociables en el mercado de valores, incluyendo, entre otros, acciones, obligaciones, bonos, cédulas, cuotas de fondos de inversión colectivos, contratos de negociación a futuro o a  término, permutas financieras, opciones de compra o venta, valores de contenido crediticio de participación y mixto que provengan de procesos de titularización y otros que determine la Junta de Política y Regulación Monetaria y Financiera.</p>
+             
+            <p><strong>VALOR DE RENTA FIJA</strong>: Son aquellos cuyo rendimiento no depende de los resultados de la compañía emisora, sino que está predeterminado en el momento de la emisión y es aceptado por las partes.</p>
+             
+            <p><strong>VALOR DE RENTA VARIABLE</strong>: Son aquellos que no tienen  un vencimiento determinado y cuyo rendimiento, en forma de dividendos o  ganancias de capital, variará según los resultados financieros del emisor.</p>
+             
+            <p><strong>VALOR CONTABLE O VALOR EN LIBROS</strong>: Diferencia entre los activos reales y los activos exigibles de una empresa, según se desprenden de los libros de contabilidad. También llamado valor teórico de la acción, el valor calculado según el balance de la sociedad, como resultado de dividir, la diferencia del neto patrimonial  y el activo ficticio, entre el número de acciones.</p>
+             
+            <p><strong>VALOR ACTUAL NETO DE UNA INVERSIÓN (VAN</strong>): Es el valor que tendrían en el momento actual todos los cobros y pagos que se prevé que genere en el futuro un determinado activo financiero. Para ‘traer’ o descontar esos flujos, en general se emplea un tipo de interés  apropiado al riesgo y al horizonte temporal de dicho activo, bajo la hipótesis de que se mantendrá sin cambios durante toda la vida de la inversión (esta premisa suele emplearse por simplicidad operativa).</p>
+             
+            <p><strong>VALOR NOMINAL</strong>: Es el valor facial de un título, o aquel que consta impreso en el documento.</p>
+             
+            <p><strong>VALORES DE CONTENIDO CREDITICIO:</strong> Constituyen una obligación para el emisor o forman parte de un crédito asumido por éste,  como ocurre con los bonos emitidos por las empresas, en los que el tenedor es acreedor del emisor, de acuerdo con el número de valores que posee.</p>
+             
+            <p><strong>VALORES DE PARTICIPACIÓN</strong>: Son los que otorgan a sus tenedores derechos sobre un patrimonio específico. Los casos más comunes  son las acciones y las cuotas de participación en los fondos de inversión colectivos.</p>
+             
+            <p><strong>VALORES DEL SECTOR PÚBLICO</strong>: Éstos son emitidos por el Estado, las Municipalidades y, en general, por personas jurídicas de derecho público.</p>
+             
+            <p><strong>VALORES DEL SECTOR PRIVADO</strong>: Son emitidos por personas jurídicas de derecho privado.</p>
+             
+            <p><strong>VOLATILIDAD HISTÓRICA:</strong> Indica el nivel de variabilidad de los precios de un valor en un periodo determinado.</p>
+            <p>La volatilidad nos permite evaluar el riesgo a través del análisis estadístico de la serie histórica de sus cotizaciones, si un valor es muy volátil, es más difícil predecir su comportamiento, por lo que incorpora mayor incertidumbre para el inversor. Por lo tanto, a mayor volatilidad, mayor riesgo.</p>
+             
+            <p>&nbsp;</p>
+            <p><strong>W</strong></p>
+             
+             
+            <p><strong>WARRANTS:</strong> Valores negociables que incorporan el derecho de comprar o vender un activo subyacente a un precio de ejercicio determinado.</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modalRef?.hide()">Cerrar</button>
+    </div>
+</ng-template>
+<ng-template #modalSalir>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left">Cerrar sesión</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+          <p>Ud esta seguro de querer cerrar sesión?</p>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="modalRef?.hide()">Cancelar</button>
+      <button type="button" (click)="logout()" class="btn btn-primary">Aceptar</button>
+  </div>
+</ng-template>

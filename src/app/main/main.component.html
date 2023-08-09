@@ -1,0 +1,43 @@
+<!-- <div id="wrapper" class="wrapper">
+  <div class="main-header">
+    <app-navbar (emitOpenModalTransparencia)="mdlTratamientoDatosPersonalesComponent.mdlTratamientoDP.show()" [show]="true"></app-navbar>
+    <div class="content-header text-primary bg-light pb-1 px-4">
+      <div class="content-header-uno d-flex justify-content-between">
+        <h1 class="m-0 fw-bolder">
+          <span>{{(title || titleInit)}}</span>
+        </h1>
+        <xng-breadcrumb></xng-breadcrumb>
+      </div>
+      <div class="d-flex fw-light justify-content-between">
+        <span class="text-capitalize">{{userName | lowercase}} {{userLastName | lowercase}}</span>
+        <span><span class="text-capitalize">{{now | date:'EEEE'}}</span> {{now | date:'dd \'de\' MMMM \'del\' yyyy'}}</span>
+      </div>
+    </div>
+    <div class="ms-auto me-3 mt-2 alert-center">
+      <alert-msg></alert-msg>
+    </div>
+  </div>
+  <app-sidebar [userTipoPersona]="userTipoPersona" [userRazonSocial]="userRazonSocial" [userLastName]="userLastName" [userName]="userName"></app-sidebar>
+  <div class="content-wrapper py-5 px-3">-->
+    <router-outlet></router-outlet>
+  <!--
+  </div>
+  <footer class="main-footer text-center">
+    <small>
+      Casa de Valores Futuro FUTUROCAPITAL SA opera bajo las Leyes y Regulaciones del Ecuador. <br>
+      Estamos regulados por la Superintendencia de Compañías, Valores y Seguros. <a target="_blank" href="https://www.futurocasadevalores.com/legalidad-y-transparencia">Legalidad y Transparencia</a> &nbsp; <a [routerLink]="['/home/aspectosLegales']">Términos y Condiciones</a> <br>
+      <strong>Todos los derechos reservados 2021 <a target="_blank" href="https://www.futurocasadevalores.com">Casa de Valores Futuro FUTUROCAPITAL S.A.</a></strong>
+    </small>
+  </footer>
+</div>
+
+<app-modals  #childModal [title]="'Información'">
+  <div class="modal-body">
+      Su sesión está por concluir. ¿Desea continuar?
+  </div>
+  <div class="modal-footer">
+      <div class="col-sm-12">
+          <button type="button" class="btn btn-primary float-end" (click)="extendLogin();">Continuar ({{countSeg}})</button>
+      </div>
+  </div>
+</app-modals> -->

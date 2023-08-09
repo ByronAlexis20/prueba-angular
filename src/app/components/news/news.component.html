@@ -1,0 +1,42 @@
+<app-ir-sesion></app-ir-sesion>
+<div class="title mt-4">
+    <h1>Noticias</h1>
+</div>
+<div>
+    <table class="table-persona" mat-table matSort [dataSource]="dataSource">
+        <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef> Titulo </th>
+            <td mat-cell class="min-cell-2" *matCellDef="let element">
+                {{element.title}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="shortDescription">
+            <th mat-header-cell *matHeaderCellDef> Descripción </th>
+            <td mat-cell class="min-cell-2" *matCellDef="let element">
+                <div [innerHTML]="element.shortDescription">
+
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell class="min-cell-2" *matCellDef="let element">
+                <button (click)="view(element)" mat-raised-button color="primary">Ver</button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="noEncontro">
+            <td class="px-1" mat-footer-cell *matFooterCellDef [attr.colspan]="7">
+                <div class="w-100 text-center">
+                    <span>NO SE ENCONTRARON RESULTADOS...</span>
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr [hidden]="dataSource.data.length > 0 || isLoading" mat-footer-row *matFooterRowDef="['noEncontro']"></tr>
+    </table>
+    <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
+        <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
+    </div>
+    <mat-paginator [pageSizeOptions]="[4, 8, 12]" showFirstLastButtons></mat-paginator>
+</div>

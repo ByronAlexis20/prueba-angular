@@ -1,22 +1,36 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { first, map } from 'rxjs';
+import { News } from '../models/news.model';
 import { environment } from 'src/environments/environment';
-import { ApiResponse } from '../interfaces/apiResponse';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService {
-  private baseUrl = `${environment.apiBaseUrl}/${environment.merchantId}/news`;
-
-  constructor(private http: HttpClient) { }
-
-  getAllNews(): Observable<ApiResponse[]> {
-    return this.http.get<ApiResponse[]>(this.baseUrl);
+  reqHeader:HttpHeaders = new HttpHeaders({"Content-Type": "application/json"});
+  constructor(
+    private http:HttpClient
+  ) { }
+  getAll() {
+    return this.http.get<News[]>(
+      `${environment.api}/news`, 
+      { headers: this.reqHeader }
+    ).pipe(
+      map( (resp:any) => {
+        return resp.result;
+        // .map((e:News)=>(new News(e)));
+      })
+    );
   }
-
-  getNewsById(id: number): Observable<ApiResponse[]> {
-    return this.http.get<ApiResponse[]>(`${this.baseUrl}/${id}`);
+  getById(id: number) {
+    return this.http.get<News>(
+      `${environment.api}/news/${id}`, 
+      { headers: this.reqHeader }
+    ).pipe(
+      map( (resp:any) => {
+        return resp.result[0] || undefined;
+      })
+    );
   }
 }

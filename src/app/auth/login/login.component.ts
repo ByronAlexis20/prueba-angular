@@ -1,37 +1,49 @@
-import { Input, Component, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
+import { Component, OnInit, Input} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HelpersUtil } from 'src/app/utils/helpers';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
-  form: FormGroup;
-  constructor(private authService: AuthService, private router: Router, private helpersUtil: HelpersUtil) {
-    this.form = new FormGroup({
-      username: new FormControl(''),
-      password: new FormControl('')
+export class LoginComponent implements OnInit {
+  formLogin: FormGroup;
+  isLoading: boolean = false;
+  @Input() error?: string | null;
+  constructor(
+    private formBuilder: FormBuilder,
+    private userService: UserService,
+    private router: Router
+  ) {
+    this.formLogin = this.formBuilder.group({
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]]
     });
   }
-  submit() {
-    const username = this.form.value.username;
-    const password = this.form.value.password;
-    // Llama al método login del AuthService para autenticar al usuario
-    this.authService.login(username, password).subscribe(
-      (response) => {
-        this.helpersUtil.saveAuthToken(response);
-        this.router.navigate(['/menu']);
+  ngOnInit() {
+    this.formLogin.valueChanges.subscribe(() => {
+      this.error = null;
+    });
+  }
+  login() {
+    this.isLoading = true;
+    this.error = null;
+    this.userService.login(this.formLogin.value).subscribe(
+      (r:any)=>{
+        this.isLoading = false;
+        sessionStorage.setItem("token",r.result[0].access_token);
+        this.router.navigate(['/home']);
       },
-      () => {
+      (err: any) => {
+        console.log(err)
+        this.isLoading = false;
         this.error = 'Credenciales incorrectas. Inténtalo de nuevo.';
       }
     );
   }
-  @Input() error?: string | null;
-
-  @Output() submitEM = new EventEmitter();
+  goToNoticias() {
+    this.router.navigate(['/news']);
+  }
 }

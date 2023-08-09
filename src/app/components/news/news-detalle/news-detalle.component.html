@@ -1,0 +1,23 @@
+<app-ir-sesion></app-ir-sesion>
+<div class="mt-4">
+  <h1>
+    Detalle
+  </h1>
+</div>
+<div class="grid grid-cols-2">
+    <h2 class="col-span-2 text-3xl font-extrabold text-gray-900">{{ news?.title }}</h2>
+    <h3 class="col-span-2 mt-2 text-xl text-gray-600">{{ news?.subtitle }}</h3>
+    <div class="mt-6">
+      <img [src]="news?.imageUrl" alt="Imagen de la noticia" class="w-full h-64 object-cover">
+    </div>
+    <div class="mt-6">
+      <p class="text-justify text-gray-900" [innerHTML]="news?.shortDescription"></p>
+    </div>
+    <div class="col-span-2 text-justify mt-6 large-description">
+      <p class="text-gray-900" [innerHTML]="news?.largeDescription"></p>
+    </div>
+    <div class="mt-6 mb-4">
+      <button (click)="regresar()" mat-raised-button color="primary">Cerrar</button>
+    </div>
+
+</div>  
